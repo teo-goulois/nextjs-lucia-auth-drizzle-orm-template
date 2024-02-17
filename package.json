@@ -6,13 +6,24 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate": "drizzle-kit generate:pg",
+    "push": "drizzle-kit push:pg",
+    "introspect": "drizzle-kit introspect:pg",
+    "studio": "drizzle-kit studio"
   },
   "dependencies": {
+    "@lucia-auth/adapter-drizzle": "^1.0.2",
     "@nextui-org/react": "^2.2.9",
+    "arctic": "^1.1.6",
+    "dotenv": "^16.4.4",
+    "drizzle-orm": "^0.29.3",
     "framer-motion": "^11.0.5",
+    "lucia": "^3.0.1",
     "next": "14.1.0",
     "next-themes": "^0.2.1",
+    "oslo": "^1.1.1",
+    "postgres": "^3.4.3",
     "react": "^18",
     "react-dom": "^18"
   },
@@ -21,6 +32,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
+    "drizzle-kit": "^0.20.14",
     "eslint": "^8",
     "eslint-config-next": "14.1.0",
     "postcss": "^8",
