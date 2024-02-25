@@ -7,13 +7,11 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { sendEmailVerificationCode } from "./mails";
+import { loginValidator } from "@/lib/validators/authValidator";
 
-const loginWithMagicLinkSchema = z.object({
-  email: z.string().email(),
-});
 export const loginWithMagicLink = action(
-  loginWithMagicLinkSchema,
-  async ({ email }) => {
+  loginValidator,
+  async ({ email, withoutRedirect }) => {
     // check if user exists
     const existingUser = await db.query.userTable.findFirst({
       where: (user, { eq }) => eq(user.email, email),
@@ -26,9 +24,8 @@ export const loginWithMagicLink = action(
       email,
       userId: existingUser.id,
     });
-    redirect("/auth/verify-email");
-    return { data: "success" };
-    
+    if (withoutRedirect) return { data: "success" };
+    redirect(`/auth/verify-email?email=${email}`);
   }
 );
 
