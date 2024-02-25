@@ -1,7 +1,3 @@
----
-title: Next.js Lucia Auth with Drizzle ORM Template
----
-
 # Next.js Lucia Auth with Drizzle ORM Template
 
 This is a template for building web applications with Next.js, Lucia for authentication, and Drizzle ORM for database operations.
@@ -20,7 +16,7 @@ To get started with this template, follow these steps:
 1. Clone this repository:
 
    ```bash
-   git clone <repository_url>
+   git clone https://github.com/teo-goulois/nextjs-lucia-auth-drizzle-orm-template.git
    ```
 
 2. Navigate into the project directory:
