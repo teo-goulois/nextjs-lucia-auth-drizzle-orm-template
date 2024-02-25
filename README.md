@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+---
+title: Next.js Lucia Auth with Drizzle ORM Template
+---
+
+# Next.js Lucia Auth with Drizzle ORM Template
+
+This is a template for building web applications with Next.js, Lucia for authentication, and Drizzle ORM for database operations.
+
+## Features
+
+- **Next.js**: React framework for building server-side rendered and statically generated web applications.
+- **Lucia**: Lightweight authentication library for Next.js applications.
+- **Drizzle ORM**: Object-Relational Mapping library for interfacing with databases in Next.js applications.
+- **Tailwind CSS**: Utility-first CSS framework for styling.
 
 ## Getting Started
 
-First, run the development server:
+To get started with this template, follow these steps:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. Clone this repository:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+   ```bash
+   git clone <repository_url>
+   ```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+2. Navigate into the project directory:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+   ```bash
+   cd nextjs-lucia-auth-drizzle-orm-template
+   ```
 
-## Learn More
+3. Install dependencies:
 
-To learn more about Next.js, take a look at the following resources:
+   ```bash
+   pnpm install
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+4. Set up environment variables:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+   Create a `.env.local` file in the root of the project and add the environment variables from the `.env.example` file.
 
-## Deploy on Vercel
+5. Run the development server:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   ```bash
+   pnpm dev
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+6. Open your browser and navigate to [http://localhost:3000](http://localhost:3000) to see the application running.
+
+
+## Other Connection Methods or Features
+
+If you would like to implement additional connection methods or features, such as OAuth authentication, GraphQL integration, or any other feature, feel free to open an issue or submit a pull request with your suggestions!
+
+## Contributing
+
+Contributions are welcome! Feel free to open an issue or submit a pull request.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
