@@ -1,4 +1,4 @@
-import LoginForm from "@/components/auth/LoginForm";
+import { VerifyEmailForm } from "@/components/auth/VerifyEmailForm";
 
 export default function Page({
   params,
@@ -8,8 +8,8 @@ export default function Page({
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
   return (
-    <div className="h-full">
-      <LoginForm />
+    <div className="h-full flex items-center justify-center">
+      <VerifyEmailForm />
     </div>
   );
 }

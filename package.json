@@ -13,21 +13,31 @@
     "studio": "drizzle-kit studio"
   },
   "dependencies": {
+    "@ark-ui/react": "^2.1.1",
+    "@hookform/resolvers": "^3.3.4",
     "@lucia-auth/adapter-drizzle": "^1.0.2",
     "@nextui-org/react": "^2.2.9",
+    "@tanstack/react-query": "^5.21.4",
     "arctic": "^1.1.6",
     "dotenv": "^16.4.4",
     "drizzle-orm": "^0.29.3",
     "framer-motion": "^11.0.5",
     "lucia": "^3.0.1",
     "next": "14.1.0",
+    "next-safe-action": "^6.1.0",
     "next-themes": "^0.2.1",
     "oslo": "^1.1.1",
     "postgres": "^3.4.3",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-hook-form": "^7.50.1",
+    "resend": "^3.2.0",
+    "sonner": "^1.4.0",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@iconify/react": "^4.1.1",
+    "@tanstack/eslint-plugin-query": "^5.20.1",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

@@ -1,10 +1,12 @@
 "use client";
 
-import * as React from "react";
 import { NextUIProvider } from "@nextui-org/system";
-import { useRouter } from "next/navigation";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ThemeProviderProps } from "next-themes/dist/types";
+import { useRouter } from "next/navigation";
+import * as React from "react";
+import { Toaster } from "../ui/Toaster";
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -13,11 +15,14 @@ export interface ProvidersProps {
 
 export function Providers({ children, themeProps }: ProvidersProps) {
   const router = useRouter();
-
+  const [queryClient] = React.useState(() => new QueryClient());
   return (
-    <NextUIProvider navigate={router.push}>
+    <NextUIProvider navigate={router.push} className="h-full">
       <NextThemesProvider {...themeProps} defaultTheme="dark" attribute="class">
-        {children}
+        <QueryClientProvider client={queryClient}>
+          {children}
+          <Toaster />
+        </QueryClientProvider>
       </NextThemesProvider>
     </NextUIProvider>
   );

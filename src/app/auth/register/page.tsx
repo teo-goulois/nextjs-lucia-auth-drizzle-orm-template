@@ -1,4 +1,4 @@
-import LoginForm from "@/components/auth/LoginForm";
+import RegisterForm from "@/components/auth/RegisterForm";
 
 export default function Page({
   params,
@@ -9,7 +9,7 @@ export default function Page({
 }) {
   return (
     <div className="h-full">
-      <LoginForm />
+      <RegisterForm />
     </div>
   );
 }

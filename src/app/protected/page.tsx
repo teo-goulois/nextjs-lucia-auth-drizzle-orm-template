@@ -1,3 +1,5 @@
+import { LogoutButton } from "@/components/auth/LogoutButton";
+import { logout } from "@/lib/api/auth/logout";
 import { validateRequest } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
@@ -15,6 +17,7 @@ export default async function Page({
   return (
     <div>
       <h1>Hi, {user.username}!</h1>
+      <LogoutButton />
     </div>
   );
 }

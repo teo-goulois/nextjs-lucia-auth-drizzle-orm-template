@@ -1,63 +1,60 @@
 import { lucia } from "@/lib/auth";
-import { cookies } from "next/headers";
-import { OAuth2RequestError } from "arctic";
-import { generateId } from "lucia";
+import { google } from "@/lib/auth/providers";
 import { db } from "@/lib/db";
 import { oauthAccountTable, userTable } from "@/lib/db/schema";
-import { github } from "@/lib/auth/providers";
+import { OAuth2RequestError } from "arctic";
+import { generateId } from "lucia";
+import { cookies } from "next/headers";
 
 export async function GET(request: Request): Promise<Response> {
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
   const state = url.searchParams.get("state");
-  const storedState = cookies().get("github_oauth_state")?.value ?? null;
 
-  if (!code || !state || !storedState || state !== storedState) {
+  const storedState = cookies().get("google_oauth_state")?.value ?? null;
+  const storedCodeVerifier =
+    cookies().get("google_oauth_code_verifier")?.value ?? null;
+
+  if (!code || !storedState || !storedCodeVerifier || state !== storedState) {
     return new Response(null, {
       status: 400,
     });
   }
+  console.log("passed state check");
 
   try {
-    const tokens = await github.validateAuthorizationCode(code);
-    const githubUserResponse = await fetch("https://api.github.com/user", {
-      headers: {
-        Authorization: `Bearer ${tokens.accessToken}`,
-        "User-Agent": "lucia-drizzle",
-      },
-    });
+    const tokens = await google.validateAuthorizationCode(
+      code,
+      storedCodeVerifier
+    );
+    console.log({ tokens });
 
-    const githubUser: GitHubUser = await githubUserResponse.json();
-    console.log({ githubUser });
+    const googleUserResponse = await fetch(
+      "https://openidconnect.googleapis.com/v1/userinfo",
+      {
+        headers: {
+          Authorization: `Bearer ${tokens.accessToken}`,
+        },
+      }
+    );
+    const googleUser: GoogleUser = await googleUserResponse.json();
+    console.log({ googleUser });
 
-    const emailsResponse = await fetch("https://api.github.com/user/emails", {
-      headers: {
-        Authorization: `Bearer ${tokens.accessToken}`,
-      },
-    });
-    const emails = await emailsResponse.json();
-    console.log({ emails });
-
-    const primaryEmail = emails.find((email: Email) => email.primary) ?? null;
-    if (!primaryEmail) {
-      return new Response("No primary email address", {
+    if (!googleUser.email_verified) {
+      return new Response("Email should be verified", {
         status: 400,
       });
     }
-    if (!primaryEmail.verified) {
-      return new Response("Unverified email", {
-        status: 400,
-      });
-    }
-
     const existingUser = await db.query.userTable.findFirst({
-      where: (user, { eq }) => eq(user.email, primaryEmail.email),
+      where: (user, { eq }) => eq(user.email, googleUser.email),
     });
+    console.log({ existingUser });
+
     const existingAccount = await db.query.oauthAccountTable.findFirst({
       where: (user, { eq, and }) =>
         and(
-          eq(user.provider_id, "github"),
-          eq(user.provider_user_id, githubUser.id.toString())
+          eq(user.provider_id, "google"),
+          eq(user.provider_user_id, googleUser.sub.toString())
         ),
     });
     console.log({ existingAccount });
@@ -79,12 +76,11 @@ export async function GET(request: Request): Promise<Response> {
         },
       });
     }
-
     if (existingUser && !existingAccount) {
       console.log("existing user but no account");
       await db.insert(oauthAccountTable).values({
-        provider_id: "github",
-        provider_user_id: githubUser.id.toString(),
+        provider_id: "google",
+        provider_user_id: googleUser.sub.toString(),
         user_id: existingUser.id,
       });
       const session = await lucia.createSession(existingUser.id, {});
@@ -101,19 +97,19 @@ export async function GET(request: Request): Promise<Response> {
         },
       });
     }
-
     console.log("new user");
+
     const userId = generateId(15);
 
     await db.transaction(async (tx) => {
       await tx.insert(userTable).values({
         id: userId,
-        username: githubUser.login,
-        email: githubUser.email,
+        username: googleUser.name,
+        email: googleUser.email,
       });
       await tx.insert(oauthAccountTable).values({
-        provider_id: "github",
-        provider_user_id: githubUser.id.toString(),
+        provider_id: "google",
+        provider_user_id: googleUser.sub.toString(),
         user_id: userId,
       });
     });
@@ -147,44 +143,13 @@ export async function GET(request: Request): Promise<Response> {
   }
 }
 
-interface GitHubUser {
-  login: string;
-  id: number;
-  node_id: string;
-  avatar_url: string;
-  gravatar_id: string;
-  url: string;
-  html_url: string;
-  followers_url: string;
-  following_url: string;
-  gists_url: string;
-  starred_url: string;
-  subscriptions_url: string;
-  organizations_url: string;
-  repos_url: string;
-  events_url: string;
-  received_events_url: string;
-  type: string;
-  site_admin: boolean;
+interface GoogleUser {
+  sub: string;
   name: string;
-  company: string | null;
-  blog: string;
-  location: string;
+  given_name: string;
+  family_name: string;
+  picture: string;
   email: string;
-  hireable: boolean | null;
-  bio: string | null;
-  twitter_username: string | null;
-  public_repos: number;
-  public_gists: number;
-  followers: number;
-  following: number;
-  created_at: string;
-  updated_at: string;
-}
-
-interface Email {
-  email: string;
-  primary: boolean;
-  verified: boolean;
-  visibility: string | null;
+  email_verified: boolean;
+  locale: string;
 }
