@@ -1,19 +1,19 @@
 import { DrizzlePostgreSQLAdapter } from "@lucia-auth/adapter-drizzle";
+import type { Session, User } from "lucia";
 import { Lucia } from "lucia";
+import { cookies } from "next/headers";
+import { cache } from "react";
 import { db } from "../db";
 import { sessionTable } from "../db/schema/session";
 import { userTable } from "../db/schema/user";
-import { cache } from "react";
-import { cookies } from "next/headers";
-import type { Session, User } from "lucia";
-import { GitHub } from "arctic";
-const adapter = new DrizzlePostgreSQLAdapter(db, sessionTable, userTable);
+export const adapter = new DrizzlePostgreSQLAdapter(db, sessionTable, userTable);
 
 export const lucia = new Lucia(adapter, {
   sessionCookie: {
     // this sets cookies with super long expiration
     // since Next.js doesn't allow Lucia to extend cookie expiration when rendering pages
     expires: false,
+
     attributes: {
       // set to `true` when using HTTPS
       secure: process.env.NODE_ENV === "production",
@@ -64,6 +64,9 @@ export const validateRequest = cache(
     return result;
   }
 );
+
+
+
 
 declare module "lucia" {
   interface Register {

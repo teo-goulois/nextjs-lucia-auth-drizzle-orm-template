@@ -1,6 +1,5 @@
 import { LogoutButton } from "@/components/auth/LogoutButton";
 import { validateRequest } from "@/lib/auth";
-import { redirect } from "next/navigation";
 
 export default async function Page({
   params,
@@ -11,7 +10,7 @@ export default async function Page({
 }) {
   const { user } = await validateRequest();
   if (!user) {
-    return redirect("/auth/login");
+    return null;
   }
   return (
     <div className="flex justify-center items-center gap-4 flex-col h-dvh">
