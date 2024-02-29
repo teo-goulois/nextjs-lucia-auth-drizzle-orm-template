@@ -1,17 +1,20 @@
 "use server";
 
 import { db } from "@/lib/db";
+import { userTable } from "@/lib/db/schema";
 import { action } from "@/lib/safe-action";
+import { InferInsertModel } from "drizzle-orm";
+import { generateId } from "lucia";
 import { redirect } from "next/navigation";
+import { Argon2id } from "oslo/password";
 import { z } from "zod";
 import { sendEmailVerificationCode } from "./mails";
-import { userTable } from "@/lib/db/schema";
-import { generateId } from "lucia";
 
 const registerSchema = z.object({
   email: z.string().email(),
+  password: z.string().optional(),
 });
-export const register = action(registerSchema, async ({ email }) => {
+export const register = action(registerSchema, async ({ email, password }) => {
   // check if user exists
   const existingUser = await db.query.userTable.findFirst({
     where: (user, { eq }) => eq(user.email, email),
@@ -20,13 +23,22 @@ export const register = action(registerSchema, async ({ email }) => {
     throw new Error("Email already exists");
   }
 
-  // create user
   const userId = generateId(15);
-
-  await db.insert(userTable).values({
+  let values: InferInsertModel<typeof userTable> = {
     email,
     id: userId,
-  });
+    hashed_password: undefined,
+  };
+  // create user
+  if (password) {
+    const hashedPassword = await new Argon2id().hash(password);
+    values = {
+      ...values,
+      hashed_password: hashedPassword,
+      email_verified: false,
+    };
+  }
+  await db.insert(userTable).values(values);
 
   // send magic link
   await sendEmailVerificationCode({
@@ -34,5 +46,5 @@ export const register = action(registerSchema, async ({ email }) => {
     userId: userId,
   });
 
-  redirect(`/auth/verify-email?email=${email}`);
+    redirect(`/auth/verify-email?email=${email}`);
 });

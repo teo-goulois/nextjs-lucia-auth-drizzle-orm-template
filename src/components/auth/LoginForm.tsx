@@ -1,21 +1,42 @@
 "use client";
 
-import React, { useMemo } from "react";
-import { Button, Input, Link, Divider } from "@nextui-org/react";
-import { Icon } from "@iconify/react";
-import { useMutation } from "@tanstack/react-query";
-import {
-  loginWithGithub,
-  loginWithGoogle,
-  loginWithMagicLink,
-} from "@/lib/api/auth/login";
-import { Controller, useForm } from "react-hook-form";
+import { loginWithMagicLink, loginWithPassword } from "@/lib/api/auth/login";
 import { LoginValitor, loginValidator } from "@/lib/validators/authValidator";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Icon } from "@iconify/react";
+import { Button, Divider, Input, Link, Tooltip } from "@nextui-org/react";
+import { useMutation } from "@tanstack/react-query";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { ProviderForm } from "./ProviderForm";
+import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useStep } from "usehooks-ts";
+
+const variants = {
+  enter: (direction: number) => ({
+    x: direction > 1 ? 20 : -20,
+    opacity: 0,
+  }),
+  center: {
+    zIndex: 1,
+    x: 0,
+    opacity: 1,
+  },
+  exit: (direction: number) => ({
+    zIndex: 0,
+    x: direction < 1 ? 20 : -20,
+    opacity: 0,
+  }),
+};
 
 export default function LoginForm() {
+  const [isVisible, setIsVisible] = useState(false);
+  const [currentStep, helpers] = useStep(2);
+  const { goToNextStep, goToPrevStep } = helpers;
+
+  const toggleVisibility = () => setIsVisible(!isVisible);
+
   const methods = useForm<LoginValitor>({
     resolver: zodResolver(loginValidator),
   });
@@ -24,6 +45,8 @@ export default function LoginForm() {
     handleSubmit,
     control,
     formState: { errors },
+    setValue,
+    trigger,
   } = methods;
 
   const magicLinkMutation = useMutation({
@@ -37,46 +60,158 @@ export default function LoginForm() {
       toast.error(error.message ?? "An error occurred");
     },
   });
+  const passwordMutation = useMutation({
+    mutationFn: async (input: LoginValitor) => {
+      const data = await loginWithPassword(input);
+      if (data && data.serverError) {
+        throw new Error(data.serverError);
+      }
+    },
+    onError: (error) => {
+      toast.error(error.message ?? "An error occurred");
+    },
+  });
 
   const onSubmit = (data: LoginValitor) => {
-    magicLinkMutation.mutate(data);
+    if (data.withPassword) {
+      passwordMutation.mutate(data);
+    } else {
+      magicLinkMutation.mutate(data);
+    }
   };
 
   return (
     <div className="flex h-full w-full items-center justify-center">
       <div className="flex w-full max-w-sm flex-col gap-4 rounded-large bg-content1 px-8 pb-10 pt-6 shadow-small">
-        <p className="pb-2 text-xl font-medium">Log In</p>
-        <form className="flex flex-col gap-3" onSubmit={handleSubmit(onSubmit)}>
-          <Controller
-            control={control}
-            name="email"
-            render={({ field }) => {
-              return (
-                <Input
-                  {...field}
-                  label="Email Address"
-                  type="email"
-                  variant="bordered"
-                  isInvalid={!!errors.email}
-                  errorMessage={errors.email?.message}
+        <div className="flex min-h-[40px] items-center gap-2 pb-2">
+          {currentStep === 2 && (
+            <Tooltip content="Go back" delay={3000}>
+              <Button
+                isIconOnly
+                size="sm"
+                variant="flat"
+                onPress={() => {
+                  goToPrevStep();
+                  setValue("withPassword", false);
+                }}>
+                <Icon
+                  className="text-default-500"
+                  icon="solar:alt-arrow-left-linear"
+                  width={16}
                 />
-              );
+              </Button>
+            </Tooltip>
+          )}
+          <p className="text-xl font-medium">Log In</p>
+        </div>
+        <AnimatePresence custom={currentStep} initial={false} mode="wait">
+          <motion.form
+            key={currentStep}
+            animate="center"
+            className="flex flex-col gap-3"
+            custom={currentStep}
+            exit="exit"
+            initial="enter"
+            transition={{
+              x: { type: "spring", stiffness: 300, damping: 30 },
+              opacity: { duration: 0.2 },
             }}
-          />
+            variants={variants}
+            onSubmit={handleSubmit(onSubmit)}>
+            {currentStep === 1 ? (
+              <>
+                <Controller
+                  control={control}
+                  name="email"
+                  render={({ field }) => {
+                    return (
+                      <Input
+                        {...field}
+                        label="Email Address"
+                        type="email"
+                        onChange={(e) => {
+                          field.onChange(e);
+                          trigger("email");
+                        }}
+                        variant="bordered"
+                        placeholder="Enter your email"
+                        isInvalid={!!errors.email}
+                        errorMessage={errors.email?.message}
+                      />
+                    );
+                  }}
+                />
+                <Button
+                  fullWidth
+                  isLoading={magicLinkMutation.isPending}
+                  color="primary"
+                  type="submit"
+                  onPress={() => {
+                    setValue("withPassword", false);
+                  }}>
+                  Log In with Email
+                </Button>
 
-          <Button
-            isLoading={magicLinkMutation.isPending}
-            color="primary"
-            startContent={
-              <Icon
-                className="pointer-events-none text-2xl"
-                icon="solar:letter-bold"
-              />
-            }
-            type="submit">
-            Continue with Email
-          </Button>
-        </form>
+                <Button
+                  onPress={async () => {
+                    setValue("withPassword", true);
+                    const isValid = await trigger("email");
+                    isValid && goToNextStep();
+                  }}
+                  fullWidth
+                  color="default"
+                  variant="flat">
+                  continue with password
+                </Button>
+              </>
+            ) : (
+              <>
+                <Controller
+                  control={control}
+                  name="password"
+                  render={({ field }) => {
+                    return (
+                      <Input
+                        {...field}
+                        endContent={
+                          <button type="button" onClick={toggleVisibility}>
+                            {isVisible ? (
+                              <Icon
+                                className="pointer-events-none text-2xl text-default-400"
+                                icon="solar:eye-bold"
+                              />
+                            ) : (
+                              <Icon
+                                className="pointer-events-none text-2xl text-default-400"
+                                icon="solar:eye-closed-linear"
+                              />
+                            )}
+                          </button>
+                        }
+                        label="Password"
+                        name="password"
+                        placeholder="Enter your password"
+                        type={isVisible ? "text" : "password"}
+                        variant="bordered"
+                        isInvalid={!!errors.password}
+                        errorMessage={errors.password?.message}
+                      />
+                    );
+                  }}
+                />
+
+                <Button
+                  isLoading={passwordMutation.isPending}
+                  fullWidth
+                  color="primary"
+                  type="submit">
+                  Log In
+                </Button>
+              </>
+            )}
+          </motion.form>
+        </AnimatePresence>
+
         <div className="flex items-center gap-4 py-2">
           <Divider className="flex-1" />
           <p className="shrink-0 text-tiny text-default-500">OR</p>

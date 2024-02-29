@@ -8,6 +8,8 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { sendEmailVerificationCode } from "./mails";
 import { loginValidator } from "@/lib/validators/authValidator";
+import { Argon2id } from "oslo/password";
+import { lucia } from "@/lib/auth";
 
 export const loginWithMagicLink = action(
   loginValidator,
@@ -71,3 +73,47 @@ export const loginWithGoogle = async () => {
 
   return redirect(url.toString());
 };
+
+export const loginWithPassword = action(
+  loginValidator,
+  async ({ email, withoutRedirect, password }) => {
+    // check if user exists
+    const existingUser = await db.query.userTable.findFirst({
+      where: (user, { eq }) => eq(user.email, email),
+    });
+    if (!existingUser) {
+      throw new Error("Invalid email");
+    }
+    if (!password) {
+      throw new Error("Password is required");
+    }
+    if (!existingUser.hashed_password) {
+      throw new Error("User does not have a password");
+    }
+    const validPassword = await new Argon2id().verify(
+      existingUser.hashed_password,
+      password
+    );
+
+    if (!validPassword) {
+      return new Response("Invalid email or password", {
+        status: 400,
+      });
+    }
+
+    if (!existingUser.email_verified) {
+      await sendEmailVerificationCode({
+        email,
+        userId: existingUser.id,
+      });
+      if (withoutRedirect) return { data: "success" };
+      return redirect(`/auth/verify-email?email=${email}`);
+    }
+
+    const session = await lucia.createSession(existingUser.id, {});
+    const sessionCookie = lucia.createSessionCookie(session.id);
+    cookies().set(sessionCookie);
+    if (withoutRedirect) return { data: "success" };
+    return redirect("/protected");
+  }
+);

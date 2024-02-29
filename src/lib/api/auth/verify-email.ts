@@ -2,7 +2,7 @@
 
 import { lucia } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { emailVerificationCodeTable } from "@/lib/db/schema";
+import { emailVerificationCodeTable, userTable } from "@/lib/db/schema";
 import { action } from "@/lib/safe-action";
 import { eq } from "drizzle-orm";
 import { cookies } from "next/headers";
@@ -13,14 +13,18 @@ const verifyEmailSchema = z.object({
   code: z.string(),
 });
 export const verifyEmail = action(verifyEmailSchema, async ({ code }) => {
-  console.log("verifu email", code);
-
   const validCode = await verifyVerificationCode(code);
-  console.log({ validCode });
-  
+
   if (!validCode) {
     throw new Error("Invalid code");
   }
+
+  await db
+    .update(userTable)
+    .set({
+      email_verified: true,
+    })
+    .where(eq(userTable.id, validCode.user_id));
 
   const session = await lucia.createSession(validCode.user_id, {});
   const sessionCookie = lucia.createSessionCookie(session.id);
@@ -36,7 +40,7 @@ async function verifyVerificationCode(code: string) {
         eq(emailVerificationCode.code, code),
     });
     console.log({ databaseCode });
-    
+
     if (!databaseCode || !databaseCode.id) {
       return false;
     }
@@ -44,8 +48,8 @@ async function verifyVerificationCode(code: string) {
       .delete(emailVerificationCodeTable)
       .where(eq(emailVerificationCodeTable.id, databaseCode.id));
     if (!isWithinExpirationDate(databaseCode.expires_at)) {
-        console.log("expired");
-        
+      console.log("expired");
+
       return false;
     }
     return databaseCode;
