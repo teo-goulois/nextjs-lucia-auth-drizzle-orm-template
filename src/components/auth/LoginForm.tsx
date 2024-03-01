@@ -199,7 +199,12 @@ export default function LoginForm() {
                     );
                   }}
                 />
-
+                <Link
+                  className="text-default-500"
+                  href="/auth/forgot-password"
+                  size="sm">
+                  Forgot password?
+                </Link>
                 <Button
                   isLoading={passwordMutation.isPending}
                   fullWidth

@@ -51,3 +51,24 @@ export const sendEmailVerificationCode = async ({
     throw new Error("Failed to send email");
   }
 };
+type SendPasswordResetTokenProps = {
+  email: string;
+  verificationLink: string;
+};
+export const sendPasswordResetToken = async ({
+  email,
+  verificationLink,
+}: SendPasswordResetTokenProps) => {
+  try {
+    await resend.emails.send({
+      from: process.env.EMAIL_FROM!,
+      to: [email],
+      subject: "Hello world",
+      text: `Your link is here ${verificationLink}`,
+      // react: EmailTemplate({ firstName: "John", code }),
+    });
+  } catch (error) {
+    console.log("Failed to send email", error);
+    throw new Error("Failed to send email");
+  }
+};

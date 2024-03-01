@@ -44,7 +44,22 @@ export const registerValidator = z
   });
 export type RegisterValidator = z.infer<typeof registerValidator>;
 
+/* Verify Email */
 export const verifyEmailValidator = z.object({
   code: z.array(z.string()).length(8),
 });
 export type VerifyEmailValidator = z.infer<typeof verifyEmailValidator>;
+
+/* Reset Password */
+export const passwordResetTokenValidator = z.object({
+  email: z.string().email(),
+});
+export type PasswordResetTokenValidator = z.infer<
+  typeof passwordResetTokenValidator
+>;
+
+export const resetPasswordValidator = z.object({
+  token: z.string(),
+  password: z.string().min(1, "Password is required"),
+});
+export type ResetPasswordValidator = z.infer<typeof resetPasswordValidator>;

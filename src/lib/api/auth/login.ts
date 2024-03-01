@@ -96,9 +96,7 @@ export const loginWithPassword = action(
     );
 
     if (!validPassword) {
-      return new Response("Invalid email or password", {
-        status: 400,
-      });
+      throw new Error("Invalid email or password");
     }
 
     if (!existingUser.email_verified) {
