@@ -5,8 +5,14 @@ import { cookies } from "next/headers";
 import { cache } from "react";
 import { db } from "../db";
 import { sessionTable } from "../db/schema/session";
+
 import { userTable } from "../db/schema/user";
-export const adapter = new DrizzlePostgreSQLAdapter(db, sessionTable, userTable);
+import { User as UserType } from "@/lib/db/schema/user";
+export const adapter = new DrizzlePostgreSQLAdapter(
+  db,
+  sessionTable,
+  userTable
+);
 
 export const lucia = new Lucia(adapter, {
   sessionCookie: {
@@ -25,6 +31,7 @@ export const lucia = new Lucia(adapter, {
       username: attributes.username,
       email: attributes.email,
       email_verified: attributes.email_verified,
+      setupTwoFactor: attributes.two_factor_secret !== null,
     };
   },
 });
@@ -65,9 +72,6 @@ export const validateRequest = cache(
   }
 );
 
-
-
-
 declare module "lucia" {
   interface Register {
     Lucia: typeof lucia;
@@ -75,8 +79,4 @@ declare module "lucia" {
   }
 }
 
-interface DatabaseUserAttributes {
-  username: string;
-  email: string;
-  email_verified: boolean;
-}
+interface DatabaseUserAttributes extends UserType {}

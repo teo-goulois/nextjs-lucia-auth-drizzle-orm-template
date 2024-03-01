@@ -1,17 +1,21 @@
 "use client";
 
 import { loginWithMagicLink, loginWithPassword } from "@/lib/api/auth/login";
-import { LoginValitor, loginValidator } from "@/lib/validators/authValidator";
+import {
+  LoginValitor,
+  loginValidator
+} from "@/lib/validators/authValidator";
+import { PinInput } from "@ark-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Icon } from "@iconify/react";
-import { Button, Divider, Input, Link, Tooltip } from "@nextui-org/react";
+import { Button, Divider, Input, Link, Tooltip, cn } from "@nextui-org/react";
 import { useMutation } from "@tanstack/react-query";
+import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { ProviderForm } from "./ProviderForm";
-import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 import { useStep } from "usehooks-ts";
+import { ProviderForm } from "./ProviderForm";
 
 const variants = {
   enter: (direction: number) => ({
@@ -32,7 +36,7 @@ const variants = {
 
 export default function LoginForm() {
   const [isVisible, setIsVisible] = useState(false);
-  const [currentStep, helpers] = useStep(2);
+  const [currentStep, helpers] = useStep(3);
   const { goToNextStep, goToPrevStep } = helpers;
 
   const toggleVisibility = () => setIsVisible(!isVisible);
@@ -66,11 +70,16 @@ export default function LoginForm() {
       if (data && data.serverError) {
         throw new Error(data.serverError);
       }
+      if (data.data?.isTwoFactor) {
+        goToNextStep();
+      }
     },
     onError: (error) => {
       toast.error(error.message ?? "An error occurred");
     },
   });
+
+
 
   const onSubmit = (data: LoginValitor) => {
     if (data.withPassword) {
@@ -84,7 +93,7 @@ export default function LoginForm() {
     <div className="flex h-full w-full items-center justify-center">
       <div className="flex w-full max-w-sm flex-col gap-4 rounded-large bg-content1 px-8 pb-10 pt-6 shadow-small">
         <div className="flex min-h-[40px] items-center gap-2 pb-2">
-          {currentStep === 2 && (
+          {currentStep > 1 && (
             <Tooltip content="Go back" delay={3000}>
               <Button
                 isIconOnly
@@ -164,7 +173,7 @@ export default function LoginForm() {
                   continue with password
                 </Button>
               </>
-            ) : (
+            ) : currentStep === 2 ? (
               <>
                 <Controller
                   control={control}
@@ -211,6 +220,60 @@ export default function LoginForm() {
                   color="primary"
                   type="submit">
                   Log In
+                </Button>
+              </>
+            ) : (
+              <>
+                <Controller
+                  control={control}
+                  name="code"
+                  render={({ field }) => {
+                    return (
+                      <div className="">
+                        <PinInput.Root
+                          value={field.value}
+                          onValueChange={(value) => field.onChange(value.value)}
+                          className="space-y-3 group data-[invalid]:border-red-300 "
+                          otp
+                          form="verify-email-form"
+                          id="code"
+                          invalid={!!errors.code}
+                          type="numeric"
+                          disabled={passwordMutation.isPending}
+                          blurOnComplete
+                          onValueComplete={(e) => {
+                            console.log(e);
+                          }}>
+                          <PinInput.Label>Verification code</PinInput.Label>
+                          <PinInput.Control className="flex items-center gap-1.5">
+                            {Array.from(Array(6)).map((id, index) => (
+                              <PinInput.Input
+                                key={index}
+                                index={index}
+                                className={cn(
+                                  "aspect-square h-11 w-11 text-center group-data-[invalid]:!border-danger group-data-[invalid]:text-danger",
+                                  "w-full font-normal bg-transparent !outline-none placeholder:text-foreground-500 focus-visible:outline-none rounded-medium",
+                                  [
+                                    "border-medium",
+                                    "border-default-200",
+                                    "data-[hover=true]:border-default-400",
+                                    "group-data-[focus=true]:border-default-foreground",
+                                  ]
+                                )}></PinInput.Input>
+                            ))}
+                          </PinInput.Control>
+                        </PinInput.Root>
+                      </div>
+                    );
+                  }}
+                />
+
+                <Button
+                  type="submit"
+                  isLoading={passwordMutation.isPending}
+                  fullWidth
+                  color="primary">
+                  Verify
                 </Button>
               </>
             )}

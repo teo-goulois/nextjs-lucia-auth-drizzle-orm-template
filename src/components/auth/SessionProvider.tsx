@@ -4,7 +4,7 @@ import { PropsWithChildren, createContext, useContext } from "react";
 
 type ContextType = Awaited<ReturnType<typeof validateRequest>>;
 
-const SessionContext = createContext<ContextType>({
+export const SessionContext = createContext<ContextType>({
   session: null,
   user: null,
 });

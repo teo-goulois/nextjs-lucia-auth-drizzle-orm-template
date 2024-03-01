@@ -3,6 +3,8 @@ import { TimeSpan, createDate, isWithinExpirationDate } from "oslo";
 import { db } from "../db";
 import { passwordResetTokenTable, sessionTable, userTable } from "../db/schema";
 import { generateId } from "lucia";
+import { createTOTPKeyURI } from "oslo/otp";
+import { encodeHex } from "oslo/encoding";
 
 export const getSessionForMiddleware = async (sessionId: string | null) => {
   if (!sessionId) {
@@ -39,7 +41,6 @@ export const getSessionForMiddleware = async (sessionId: string | null) => {
 export async function createPasswordResetToken(
   userId: string
 ): Promise<string> {
-  // optionally invalidate all existing tokens
   await db
     .delete(passwordResetTokenTable)
     .where(eq(passwordResetTokenTable.user_id, userId));
@@ -52,4 +53,14 @@ export async function createPasswordResetToken(
   });
 
   return tokenId;
+}
+
+export function createOtpCode(email: string) {
+  const twoFactorSecret = crypto.getRandomValues(new Uint8Array(20));
+  const uri = createTOTPKeyURI("localhost:3000", email, twoFactorSecret);
+
+  return {
+    uri,
+    secret: encodeHex(twoFactorSecret),
+  };
 }

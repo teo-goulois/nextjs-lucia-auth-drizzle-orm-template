@@ -1,15 +1,16 @@
 "use server";
+import { lucia } from "@/lib/auth";
 import { github, google } from "@/lib/auth/providers";
 import { db } from "@/lib/db";
 import { action } from "@/lib/safe-action";
+import { loginValidator } from "@/lib/validators/authValidator";
 import { generateCodeVerifier, generateState } from "arctic";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { z } from "zod";
-import { sendEmailVerificationCode } from "./mails";
-import { loginValidator } from "@/lib/validators/authValidator";
+import { decodeHex } from "oslo/encoding";
+import { TOTPController } from "oslo/otp";
 import { Argon2id } from "oslo/password";
-import { lucia } from "@/lib/auth";
+import { sendEmailVerificationCode } from "./mails";
 
 export const loginWithMagicLink = action(
   loginValidator,
@@ -76,7 +77,7 @@ export const loginWithGoogle = async () => {
 
 export const loginWithPassword = action(
   loginValidator,
-  async ({ email, withoutRedirect, password }) => {
+  async ({ email, withoutRedirect, password, code }) => {
     // check if user exists
     const existingUser = await db.query.userTable.findFirst({
       where: (user, { eq }) => eq(user.email, email),
@@ -106,6 +107,24 @@ export const loginWithPassword = action(
       });
       if (withoutRedirect) return { data: "success" };
       return redirect(`/auth/verify-email?email=${email}`);
+    }
+
+    if (existingUser.two_factor_secret) {
+      if (code) {
+        const validOTP = await new TOTPController().verify(
+          code.join(""),
+          decodeHex(existingUser.two_factor_secret)
+        );
+
+        if (!validOTP) throw new Error("Invalid code");
+        const session = await lucia.createSession(existingUser.id, {});
+        const sessionCookie = lucia.createSessionCookie(session.id);
+        cookies().set(sessionCookie);
+        return redirect("/protected");
+      }
+      return {
+        isTwoFactor: true,
+      };
     }
 
     const session = await lucia.createSession(existingUser.id, {});

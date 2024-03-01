@@ -1,5 +1,7 @@
-import React from "react";
+import { SessionContext } from "@/components/auth/SessionProvider";
+import React, { useContext } from "react";
 
 export const useCurrentUser = () => {
-  return {};
+  const { user } = useContext(SessionContext);
+  return { user };
 };

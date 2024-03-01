@@ -1,11 +1,13 @@
 import { z } from "zod";
 
+/* Login */
 export const loginValidator = z
   .object({
     email: z.string().email(),
     withoutRedirect: z.boolean().optional(),
     withPassword: z.boolean().optional(),
     password: z.string().optional(),
+    code: z.optional(z.array(z.string())),
   })
   .superRefine((data, ctx) => {
     if (data.withPassword) {
@@ -20,9 +22,9 @@ export const loginValidator = z
     }
     return true;
   });
-
 export type LoginValitor = z.infer<typeof loginValidator>;
 
+/* Register */
 export const registerValidator = z
   .object({
     email: z.string().email(),
@@ -57,9 +59,18 @@ export const passwordResetTokenValidator = z.object({
 export type PasswordResetTokenValidator = z.infer<
   typeof passwordResetTokenValidator
 >;
-
 export const resetPasswordValidator = z.object({
   token: z.string(),
   password: z.string().min(1, "Password is required"),
 });
 export type ResetPasswordValidator = z.infer<typeof resetPasswordValidator>;
+
+/* Two factor auth */
+export const twoFactorAuthValidator = z.object({
+  code: z.array(z.string()).length(6),
+});
+export type TwoFactorAuthValidator = z.infer<typeof twoFactorAuthValidator>;
+export const enableTwoFactorAuthValidator = z.object({
+  code: z.string().length(6),
+  secret: z.string(),
+});
