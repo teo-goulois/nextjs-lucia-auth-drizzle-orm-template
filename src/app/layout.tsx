@@ -6,6 +6,7 @@ import { viewport } from "@/config/viewport";
 import { validateRequest } from "@/lib/auth";
 import { cn } from "@nextui-org/react";
 import "./globals.css";
+import Navbar from "@/components/Navbar";
 
 export const siteMetadata = metadata;
 export const siteViewport = viewport;
@@ -26,7 +27,10 @@ export default async function RootLayout({
           "min-h-screen h-screen"
         )}>
         <SessionProvider session={session}>
-          <Providers>{children}</Providers>
+          <Providers>
+            <Navbar />
+            {children}
+          </Providers>
         </SessionProvider>
       </body>
     </html>
