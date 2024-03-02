@@ -9,6 +9,7 @@ import { redirect } from "next/navigation";
 import { Argon2id } from "oslo/password";
 import { z } from "zod";
 import { sendEmailVerificationCode } from "./mails";
+import { useRateLimiting } from "@/lib/utils.server";
 
 const registerSchema = z.object({
   email: z.string().email(),
@@ -16,6 +17,8 @@ const registerSchema = z.object({
 });
 export const register = action(registerSchema, async ({ email, password }) => {
   // check if user exists
+  await useRateLimiting();
+
   const existingUser = await db.query.userTable.findFirst({
     where: (user, { eq }) => eq(user.email, email),
   });

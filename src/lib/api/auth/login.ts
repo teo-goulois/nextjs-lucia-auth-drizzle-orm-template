@@ -4,6 +4,7 @@ import { lucia } from "@/lib/auth";
 import { github, google } from "@/lib/auth/providers";
 import { db } from "@/lib/db";
 import { action } from "@/lib/safe-action";
+import { useRateLimiting } from "@/lib/utils.server";
 import { loginValidator } from "@/lib/validators/authValidator";
 import { generateCodeVerifier, generateState } from "arctic";
 import { cookies } from "next/headers";
@@ -16,6 +17,7 @@ import { sendEmailVerificationCode } from "./mails";
 export const loginWithMagicLink = action(
   loginValidator,
   async ({ email, withoutRedirect }) => {
+    await useRateLimiting();
     // check if user exists
     const existingUser = await db.query.userTable.findFirst({
       where: (user, { eq }) => eq(user.email, email),
@@ -79,6 +81,7 @@ export const loginWithGoogle = async () => {
 export const loginWithPassword = action(
   loginValidator,
   async ({ email, withoutRedirect, password, code }) => {
+    await useRateLimiting();
     // check if user exists
     const existingUser = await db.query.userTable.findFirst({
       where: (user, { eq }) => eq(user.email, email),
