@@ -44,16 +44,7 @@ export const LoginCodeEmail = ({ validationCode }: LoginCodeEmailProps) => (
             <Button
               className={cn(
                 "px-4 py-3 text-small gap-2 rounded-medium",
-                "inline-flex",
-                "items-center",
-                "justify-center",
-                "box-border",
-                "appearance-none",
-                "outline-none",
-                "select-none",
-                "whitespace-nowrap",
-                "min-w-max",
-                "font-normal",
+                "inline-flex items-center justify-center",
                 "rounded-md bg-blue-500 text-white"
               )}
               href={`${baseUrl}/api/verify-email?token=${validationCode}`}>

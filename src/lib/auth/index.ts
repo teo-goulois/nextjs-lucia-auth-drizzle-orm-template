@@ -6,14 +6,15 @@ import { cache } from "react";
 import { db } from "../db";
 import { sessionTable } from "../db/schema/session";
 
-import { userTable } from "../db/schema/user";
 import { User as UserType } from "@/lib/db/schema/user";
+import { userTable } from "../db/schema/user";
+
 export const adapter = new DrizzlePostgreSQLAdapter(
   db,
   sessionTable,
   userTable
 );
-
+// https://lucia-auth.com/getting-started/nextjs-app
 export const lucia = new Lucia(adapter, {
   sessionCookie: {
     // this sets cookies with super long expiration

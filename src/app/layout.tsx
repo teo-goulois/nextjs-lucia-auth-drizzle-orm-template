@@ -1,11 +1,11 @@
+import { SessionProvider } from "@/components/auth/SessionProvider";
+import { Providers } from "@/components/provider/Providers";
 import { fontMono, fontSans } from "@/config/font";
-import { cn } from "@nextui-org/react";
-import "./globals.css";
 import { metadata } from "@/config/metadata";
 import { viewport } from "@/config/viewport";
-import { Providers } from "@/components/provider/Providers";
-import { SessionProvider } from "@/components/auth/SessionProvider";
 import { validateRequest } from "@/lib/auth";
+import { cn } from "@nextui-org/react";
+import "./globals.css";
 
 export const siteMetadata = metadata;
 export const siteViewport = viewport;

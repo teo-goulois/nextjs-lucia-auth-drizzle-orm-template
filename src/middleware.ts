@@ -16,11 +16,13 @@ export async function middleware(request: NextRequest) {
     nextUrl.pathname.startsWith(route)
   );
 
+  // Redirect to /protected if user is logged in and tries to access auth routes
   if (user && isAuthRoute) {
     const url = new URL("/protected", nextUrl.origin);
     return NextResponse.redirect(url);
   }
 
+  // Redirect to /auth/login if user is not logged in and tries to access protected routes
   if (!user && isProtectedRoute) {
     const url = new URL("/auth/login", nextUrl.origin);
     return NextResponse.redirect(url);

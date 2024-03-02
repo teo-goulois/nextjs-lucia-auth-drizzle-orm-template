@@ -1,5 +1,5 @@
 import { GitHub, Google } from "arctic";
-
+// https://arctic.js.org/guides/oauth2
 export const github = new GitHub(
   process.env.GITHUB_CLIENT_ID!,
   process.env.GITHUB_CLIENT_SECRET!,

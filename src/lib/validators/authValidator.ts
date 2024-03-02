@@ -24,6 +24,7 @@ export const loginValidator = z
   });
 export type LoginValitor = z.infer<typeof loginValidator>;
 
+
 /* Register */
 export const registerValidator = z
   .object({

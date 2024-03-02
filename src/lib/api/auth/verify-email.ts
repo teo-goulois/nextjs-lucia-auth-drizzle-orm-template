@@ -40,7 +40,6 @@ export async function verifyVerificationCode(code: string) {
       where: (emailVerificationCode, { eq }) =>
         eq(emailVerificationCode.code, code),
     });
-    console.log({ databaseCode });
 
     if (!databaseCode || !databaseCode.id) {
       return false;
@@ -49,8 +48,6 @@ export async function verifyVerificationCode(code: string) {
       .delete(emailVerificationCodeTable)
       .where(eq(emailVerificationCodeTable.id, databaseCode.id));
     if (!isWithinExpirationDate(databaseCode.expires_at)) {
-      console.log("expired");
-
       return false;
     }
     return databaseCode;

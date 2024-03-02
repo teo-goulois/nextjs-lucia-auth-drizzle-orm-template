@@ -49,5 +49,5 @@ export const register = action(registerSchema, async ({ email, password }) => {
     userId: userId,
   });
 
-    redirect(`/auth/verify-email?email=${email}`);
+  redirect(`/auth/verify-email?email=${email}`);
 });

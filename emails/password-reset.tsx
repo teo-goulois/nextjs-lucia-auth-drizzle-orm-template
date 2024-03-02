@@ -50,16 +50,7 @@ export const ResetPasswordEmail = ({
               <Button
                 className={cn(
                   "px-4 py-3 text-small gap-2 rounded-medium",
-                  "inline-flex",
-                  "items-center",
-                  "justify-center",
-                  "box-border",
-                  "appearance-none",
-                  "outline-none",
-                  "select-none",
-                  "whitespace-nowrap",
-                  "min-w-max",
-                  "font-normal",
+                  "inline-flex items-center justify-center",
                   "rounded-md bg-blue-500 text-white"
                 )}
                 href={resetPasswordLink}>
@@ -72,7 +63,7 @@ export const ResetPasswordEmail = ({
               <Text>
                 To keep your account secure, please don&apos;t forward this
                 email to anyone. See our Help Center for{" "}
-                <Link style={anchor} href={`${baseUrl}`}>
+                <Link className="text-blue-600" href={`${baseUrl}`}>
                   more security tips.
                 </Link>
               </Text>
@@ -94,40 +85,3 @@ ResetPasswordEmail.PreviewProps = {
 } as ResetPasswordEmailProps;
 
 export default ResetPasswordEmail;
-
-const main = {
-  backgroundColor: "#f6f9fc",
-  padding: "10px 0",
-};
-
-const container = {
-  backgroundColor: "#ffffff",
-  border: "1px solid #f0f0f0",
-  padding: "45px",
-};
-
-const text = {
-  fontSize: "16px",
-  fontFamily:
-    "'Open Sans', 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif",
-  fontWeight: "300",
-  color: "#404040",
-  lineHeight: "26px",
-};
-
-const button = {
-  backgroundColor: "#007ee6",
-  borderRadius: "4px",
-  color: "#fff",
-  fontFamily: "'Open Sans', 'Helvetica Neue', Arial",
-  fontSize: "15px",
-  textDecoration: "none",
-  textAlign: "center" as const,
-  display: "block",
-  width: "210px",
-  padding: "14px 7px",
-};
-
-const anchor = {
-  textDecoration: "underline",
-};

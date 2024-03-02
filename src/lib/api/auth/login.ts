@@ -30,12 +30,13 @@ export const loginWithMagicLink = action(
       email,
       userId: existingUser.id,
     });
-    if (withoutRedirect) return { data: "success" };
+    if (withoutRedirect) return;
     redirect(`/auth/verify-email?email=${email}`);
   }
 );
 
 export const loginWithGithub = async () => {
+  // https://arctic.js.org/guides/oauth2-pkce
   const state = generateState();
 
   const url = await github.createAuthorizationURL(state, {
@@ -53,6 +54,7 @@ export const loginWithGithub = async () => {
 };
 
 export const loginWithGoogle = async () => {
+  // https://arctic.js.org/guides/oauth2-pkce
   const state = generateState();
   const codeVerifier = generateCodeVerifier();
 
@@ -77,6 +79,7 @@ export const loginWithGoogle = async () => {
 
   return redirect(url.toString());
 };
+
 
 export const loginWithPassword = action(
   loginValidator,
@@ -109,7 +112,7 @@ export const loginWithPassword = action(
         email,
         userId: existingUser.id,
       });
-      if (withoutRedirect) return { data: "success" };
+      if (withoutRedirect) return 
       return redirect(`/auth/verify-email?email=${email}`);
     }
 
@@ -134,7 +137,7 @@ export const loginWithPassword = action(
     const session = await lucia.createSession(existingUser.id, {});
     const sessionCookie = lucia.createSessionCookie(session.id);
     cookies().set(sessionCookie);
-    if (withoutRedirect) return { data: "success" };
+    if (withoutRedirect) return 
     return redirect("/protected");
   }
 );

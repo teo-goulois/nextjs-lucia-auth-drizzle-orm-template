@@ -8,24 +8,9 @@ import { alphabet, generateRandomString } from "oslo/crypto";
 
 import LoginCodeEmail from "../../../../emails/login-code";
 import ResetPasswordEmail from "../../../../emails/password-reset";
+import { generateEmailVerificationCode } from "@/lib/auth/utils";
 
-async function generateEmailVerificationCode(
-  userId: string,
-  email: string
-): Promise<string> {
-  await db
-    .delete(emailVerificationCodeTable)
-    .where(eq(emailVerificationCodeTable.user_id, userId));
 
-  const code = generateRandomString(8, alphabet("0-9"));
-  await db.insert(emailVerificationCodeTable).values({
-    user_id: userId,
-    email,
-    code,
-    expires_at: createDate(new TimeSpan(5, "m")), // 5 minutes
-  });
-  return code;
-}
 
 export const sendEmailVerificationCode = async ({
   email,
@@ -34,11 +19,7 @@ export const sendEmailVerificationCode = async ({
   userId: string;
   email: string;
 }) => {
-  console.log("Sending email verification code");
-
   const code = await generateEmailVerificationCode(userId, email);
-  console.log({ code });
-
   try {
     await resend.emails.send({
       from: process.env.EMAIL_FROM!,

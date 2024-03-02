@@ -1,12 +1,19 @@
 import { eq } from "drizzle-orm";
 import { TimeSpan, createDate, isWithinExpirationDate } from "oslo";
 import { db } from "../db";
-import { passwordResetTokenTable, sessionTable, userTable } from "../db/schema";
+import {
+  emailVerificationCodeTable,
+  passwordResetTokenTable,
+  sessionTable,
+  userTable,
+} from "../db/schema";
 import { generateId } from "lucia";
 import { createTOTPKeyURI } from "oslo/otp";
 import { encodeHex } from "oslo/encoding";
+import { alphabet, generateRandomString } from "oslo/crypto";
 
 export const getSessionForMiddleware = async (sessionId: string | null) => {
+  // can't use lucia here because there is incompability with edge
   if (!sessionId) {
     return {
       user: null,
@@ -55,9 +62,28 @@ export async function createPasswordResetToken(
   return tokenId;
 }
 
+export async function generateEmailVerificationCode(
+  userId: string,
+  email: string
+): Promise<string> {
+  await db
+    .delete(emailVerificationCodeTable)
+    .where(eq(emailVerificationCodeTable.user_id, userId));
+
+  const code = generateRandomString(8, alphabet("0-9"));
+  await db.insert(emailVerificationCodeTable).values({
+    user_id: userId,
+    email,
+    code,
+    expires_at: createDate(new TimeSpan(5, "m")), // 5 minutes
+  });
+  return code;
+}
+
 export function createOtpCode(email: string) {
+  const appName = "Acme Inc";
   const twoFactorSecret = crypto.getRandomValues(new Uint8Array(20));
-  const uri = createTOTPKeyURI("localhost:3000", email, twoFactorSecret);
+  const uri = createTOTPKeyURI(appName, email, twoFactorSecret);
 
   return {
     uri,
