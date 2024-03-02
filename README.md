@@ -1,13 +1,44 @@
-# Next.js Lucia Auth with Drizzle ORM Template
+# Next.js auth boilerplate with Lucia and Drizzle ORM
 
 This is a template for building web applications with Next.js, Lucia for authentication, and Drizzle ORM for database operations.
 
+## Table of Contents
+
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## Features
 
-- **Next.js**: React framework for building server-side rendered and statically generated web applications.
-- **Lucia**: Lightweight authentication library for Next.js applications.
-- **Drizzle ORM**: Object-Relational Mapping library for interfacing with databases in Next.js applications.
-- **Tailwind CSS**: Utility-first CSS framework for styling.
+### Password-less Auth with Email Link and Code
+
+- Enable users to access your application securely without the need for passwords.
+
+### GitHub, Google, and More Auth
+
+- Seamless integration with popular providers like GitHub and Google.
+
+### Password Auth with Reset Password Functionality
+
+- Enhance security with password authentication and reset password functionality.
+
+### Middleware Routing
+
+- Manage routes and access control effortlessly with middleware routing.
+
+### Two-Factor Auth for More Protection
+
+- Add an extra layer of protection to your application with two-factor authentication (2FA).
+
+### Beautiful Custom Email with React Email
+
+- Impress your users with stunning, custom email communications.
+
+### Rate Limiting to Prevent Spamming
+
+- Combat spam and abuse with built-in rate limiting.
 
 ## Getting Started
 
@@ -44,13 +75,38 @@ To get started with this template, follow these steps:
 6. Open your browser and navigate to [http://localhost:3000](http://localhost:3000) to see the application running.
 
 
-## Other Connection Methods or Features
+# Usage
 
-If you would like to implement additional connection methods or features, such as OAuth authentication, GraphQL integration, or any other feature, feel free to open an issue or submit a pull request with your suggestions!
+this boilerplate offers a seamless authentication experience for your Next.js projects. Customize authentication methods, manage routes, and ensure secure access for your users.
+
+### Authentication Providers
+
+this boilerplate supports authentication with popular providers such as GitHub, Google, and more. Integrate authentication effortlessly and provide users with multiple login options.
+
+### Password-less Authentication
+
+Enhance user experience and security with password-less authentication. Enable users to access your application via email links or codes without the need for passwords.
+
+### Middleware Routing
+
+Simplify route management and access control with middleware routing. Define custom routes and ensure a smooth navigation experience for your users.
+
+### Two-Factor Authentication (2FA)
+
+Add an extra layer of security to your application with two-factor authentication (2FA). Protect sensitive data and prevent unauthorized access with 2FA support.
 
 ## Contributing
 
-Contributions are welcome! Feel free to open an issue or submit a pull request.
+We welcome contributions from the community! To contribute to this boilerplate, please follow these guidelines:
+
+- Fork the repository
+- Create a new branch (`git checkout -b feature`)
+- Make your changes
+- Commit your changes (`git commit -am 'Add feature'`)
+- Push to the branch (`git push origin feature`)
+- Create a new Pull Request
+
+If you find a bug or have a feature request, please open an issue.
 
 ## License
 
