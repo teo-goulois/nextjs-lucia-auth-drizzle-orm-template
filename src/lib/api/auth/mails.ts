@@ -4,9 +4,10 @@ import { resend } from "@/lib/resend";
 import { eq } from "drizzle-orm";
 
 import { TimeSpan, createDate } from "oslo";
-import { generateRandomString, alphabet } from "oslo/crypto";
+import { alphabet, generateRandomString } from "oslo/crypto";
 
-import { EmailTemplate } from "../../../../emails/email-template";
+import LoginCodeEmail from "../../../../emails/login-code";
+import ResetPasswordEmail from "../../../../emails/password-reset";
 
 async function generateEmailVerificationCode(
   userId: string,
@@ -42,9 +43,9 @@ export const sendEmailVerificationCode = async ({
     await resend.emails.send({
       from: process.env.EMAIL_FROM!,
       to: [email],
-      subject: "Hello world",
+      subject: "Verify your email address",
       text: `Your email verification code is: ${code}`,
-      // react: EmailTemplate({ firstName: "John", code }),
+      react: LoginCodeEmail({ validationCode: code }),
     });
   } catch (error) {
     console.log("Failed to send email", error);
@@ -54,18 +55,23 @@ export const sendEmailVerificationCode = async ({
 type SendPasswordResetTokenProps = {
   email: string;
   verificationLink: string;
+  firstname: string;
 };
 export const sendPasswordResetToken = async ({
   email,
   verificationLink,
+  firstname,
 }: SendPasswordResetTokenProps) => {
   try {
     await resend.emails.send({
       from: process.env.EMAIL_FROM!,
       to: [email],
-      subject: "Hello world",
+      subject: "Reset your password",
       text: `Your link is here ${verificationLink}`,
-      // react: EmailTemplate({ firstName: "John", code }),
+      react: ResetPasswordEmail({
+        userFirstname: firstname,
+        resetPasswordLink: verificationLink,
+      }),
     });
   } catch (error) {
     console.log("Failed to send email", error);

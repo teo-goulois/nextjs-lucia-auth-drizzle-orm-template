@@ -1,4 +1,5 @@
 import { VerifyEmailForm } from "@/components/auth/VerifyEmailForm";
+import { verifyEmail } from "@/lib/api/auth/verify-email";
 import Link from "next/link";
 
 export default function Page({

@@ -37,6 +37,7 @@ export const passwordResetToken = action(
     await sendPasswordResetToken({
       email,
       verificationLink,
+      firstname: user.username ?? user.email?.split("@")[0]!,
     });
 
     return {

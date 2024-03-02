@@ -9,6 +9,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { isWithinExpirationDate } from "oslo";
 import { z } from "zod";
+
 const verifyEmailSchema = z.object({
   code: z.string(),
 });
@@ -33,7 +34,7 @@ export const verifyEmail = action(verifyEmailSchema, async ({ code }) => {
   return redirect("/protected");
 });
 
-async function verifyVerificationCode(code: string) {
+export async function verifyVerificationCode(code: string) {
   const data = await db.transaction(async (tx) => {
     const databaseCode = await tx.query.emailVerificationCodeTable.findFirst({
       where: (emailVerificationCode, { eq }) =>
