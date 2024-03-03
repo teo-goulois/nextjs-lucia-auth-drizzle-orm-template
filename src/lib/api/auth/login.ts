@@ -4,7 +4,7 @@ import { lucia } from "@/lib/auth";
 import { github, google } from "@/lib/auth/providers";
 import { db } from "@/lib/db";
 import { action } from "@/lib/safe-action";
-import { useRateLimiting } from "@/lib/utils.server";
+import { rateLimiting, useRateLimiting } from "@/lib/utils.server";
 import { loginValidator } from "@/lib/validators/authValidator";
 import { generateCodeVerifier, generateState } from "arctic";
 import { cookies } from "next/headers";
@@ -156,7 +156,7 @@ export const loginWithPassword2 = async ({
 }: z.infer<typeof loginValidator>) => {
   console.log("loginWithPassword 1");
 
-  await useRateLimiting();
+  await rateLimiting();
   console.log("loginWithPassword 2");
   // check if user exists
   const existingUser = await db.query.userTable.findFirst({
