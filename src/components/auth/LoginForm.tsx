@@ -1,10 +1,7 @@
 "use client";
 
 import { loginWithMagicLink, loginWithPassword } from "@/lib/api/auth/login";
-import {
-  LoginValitor,
-  loginValidator
-} from "@/lib/validators/authValidator";
+import { LoginValitor, loginValidator } from "@/lib/validators/authValidator";
 import { PinInput } from "@ark-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Icon } from "@iconify/react";
@@ -70,7 +67,7 @@ export default function LoginForm() {
       if (data && data.serverError) {
         throw new Error(data.serverError);
       }
-      if (data.data?.isTwoFactor) {
+      if (data && data.data?.isTwoFactor) {
         goToNextStep();
       }
     },
@@ -78,8 +75,6 @@ export default function LoginForm() {
       toast.error(error.message ?? "An error occurred");
     },
   });
-
-
 
   const onSubmit = (data: LoginValitor) => {
     if (data.withPassword) {
