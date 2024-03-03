@@ -80,15 +80,18 @@ export const loginWithGoogle = async () => {
   return redirect(url.toString());
 };
 
-
 export const loginWithPassword = action(
   loginValidator,
   async ({ email, withoutRedirect, password, code }) => {
+    console.log("loginWithPassword 1");
+
     await useRateLimiting();
+    console.log("loginWithPassword 2");
     // check if user exists
     const existingUser = await db.query.userTable.findFirst({
       where: (user, { eq }) => eq(user.email, email),
     });
+    console.log("loginWithPassword 3");
     if (!existingUser) {
       throw new Error("Invalid email");
     }
@@ -102,6 +105,7 @@ export const loginWithPassword = action(
       existingUser.hashed_password,
       password
     );
+    console.log("loginWithPassword 4");
 
     if (!validPassword) {
       throw new Error("Invalid email or password");
@@ -112,7 +116,8 @@ export const loginWithPassword = action(
         email,
         userId: existingUser.id,
       });
-      if (withoutRedirect) return 
+      if (withoutRedirect) return;
+      console.log("loginWithPassword 5");
       return redirect(`/auth/verify-email?email=${email}`);
     }
 
@@ -137,7 +142,8 @@ export const loginWithPassword = action(
     const session = await lucia.createSession(existingUser.id, {});
     const sessionCookie = lucia.createSessionCookie(session.id);
     cookies().set(sessionCookie);
-    if (withoutRedirect) return 
+    console.log("loginWithPassword final");
+    if (withoutRedirect) return;
     return redirect("/protected");
   }
 );
