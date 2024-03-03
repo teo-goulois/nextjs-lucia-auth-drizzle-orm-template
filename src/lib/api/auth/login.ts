@@ -50,7 +50,7 @@ export const loginWithGithub = async () => {
     sameSite: "lax",
   });
 
-  return redirect(url.toString());
+  redirect(url.toString());
 };
 
 export const loginWithGoogle = async () => {
@@ -77,7 +77,7 @@ export const loginWithGoogle = async () => {
     sameSite: "lax",
   });
 
-  return redirect(url.toString());
+  redirect(url.toString());
 };
 
 export const loginWithPassword = action(
@@ -118,7 +118,7 @@ export const loginWithPassword = action(
       });
       if (withoutRedirect) return;
       console.log("loginWithPassword 5");
-      return redirect(`/auth/verify-email?email=${email}`);
+      redirect(`/auth/verify-email?email=${email}`);
     }
 
     if (existingUser.two_factor_secret) {
@@ -132,7 +132,7 @@ export const loginWithPassword = action(
         const session = await lucia.createSession(existingUser.id, {});
         const sessionCookie = lucia.createSessionCookie(session.id);
         cookies().set(sessionCookie);
-        return redirect("/protected");
+        redirect("/protected");
       }
       return {
         isTwoFactor: true,
@@ -144,6 +144,6 @@ export const loginWithPassword = action(
     cookies().set(sessionCookie);
     console.log("loginWithPassword final");
     if (withoutRedirect) return;
-    return redirect("/protected");
+    redirect("/protected");
   }
 );
