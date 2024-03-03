@@ -63,6 +63,8 @@ export default function LoginForm() {
   });
   const passwordMutation = useMutation({
     mutationFn: async (input: LoginValitor) => {
+      console.log("loginWithPassword ", { input });
+
       const data = await loginWithPassword(input);
       if (data && data.serverError) {
         throw new Error(data.serverError);
@@ -70,6 +72,7 @@ export default function LoginForm() {
       if (data && data.data?.isTwoFactor) {
         goToNextStep();
       }
+      data && console.log({ data });
     },
     onError: (error) => {
       toast.error(error.message ?? "An error occurred");

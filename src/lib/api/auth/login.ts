@@ -86,7 +86,7 @@ export const loginWithPassword = action(
     console.log("loginWithPassword 1");
 
     await useRateLimiting();
-    console.log("loginWithPassword 2");
+        console.log("loginWithPassword 2");
     // check if user exists
     const existingUser = await db.query.userTable.findFirst({
       where: (user, { eq }) => eq(user.email, email),
