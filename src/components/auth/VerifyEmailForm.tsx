@@ -121,7 +121,7 @@ export const VerifyEmailForm = () => {
                 }}>
                 <PinInput.Label>Verification code</PinInput.Label>
                 <PinInput.Control className="flex items-center gap-1.5">
-                  {Array.from(Array(8)).map((id, index) => (
+                  {Array.from(Array(6)).map((id, index) => (
                     <PinInput.Input
                       key={index}
                       index={index}
@@ -144,6 +144,7 @@ export const VerifyEmailForm = () => {
         />
       </div>
       <Button
+      color="primary"
         ref={submitButtonRef}
         type="submit"
         className="w-full"

@@ -1,17 +1,12 @@
-import { db } from "@/lib/db";
-import { emailVerificationCodeTable } from "@/lib/db/schema";
 import { resend } from "@/lib/resend";
-import { eq } from "drizzle-orm";
 
-import { TimeSpan, createDate } from "oslo";
-import { alphabet, generateRandomString } from "oslo/crypto";
 
+import { generateEmailVerificationCode } from "@/lib/auth/utils";
 import LoginCodeEmail from "../../../../emails/login-code";
 import ResetPasswordEmail from "../../../../emails/password-reset";
-import { generateEmailVerificationCode } from "@/lib/auth/utils";
 
 
-
+ 
 export const sendEmailVerificationCode = async ({
   email,
   userId,

@@ -70,7 +70,7 @@ export async function generateEmailVerificationCode(
     .delete(emailVerificationCodeTable)
     .where(eq(emailVerificationCodeTable.user_id, userId));
 
-  const code = generateRandomString(8, alphabet("0-9"));
+  const code = generateRandomString(6, alphabet("0-9"));
   await db.insert(emailVerificationCodeTable).values({
     user_id: userId,
     email,

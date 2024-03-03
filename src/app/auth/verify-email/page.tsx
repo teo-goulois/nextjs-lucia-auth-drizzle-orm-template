@@ -1,5 +1,5 @@
 import { VerifyEmailForm } from "@/components/auth/VerifyEmailForm";
-import { verifyEmail } from "@/lib/api/auth/verify-email";
+import { Divider } from "@nextui-org/react";
 import Link from "next/link";
 
 export default function Page({
@@ -12,16 +12,19 @@ export default function Page({
   const email = searchParams.email;
   return (
     <div className="h-full flex items-center justify-center">
-      <div className="mx-auto max-w-sm space-y-6">
-        <div className="space-y-2 text-center">
-          <h1 className="text-3xl font-bold">Verify your email</h1>
-          <p className="text-foreground">
+      <div className="flex w-full max-w-sm flex-col gap-4 rounded-large bg-content1 px-8 pb-10 pt-6 shadow-small">
+        <div className="flex flex-col min-h-[40px]  gap-2 pb-2">
+          <h1 className="text-xl font-medium">Verify your email</h1>
+          <p className="">
             Enter the code we sent to <strong>{email ?? "unknown"}</strong>
           </p>
         </div>
         <VerifyEmailForm />
 
-        <div className="text-center text-sm space-y-2">
+        <div className="flex items-center gap-4 py-2">
+          <Divider className="flex-1" />
+        </div>
+        <div className="flex flex-col  text-sm">
           <p>Didn&apos;t receive the code?</p>
           <p>
             Check your spam folder or <Link href={`#`}>Contact support</Link>
