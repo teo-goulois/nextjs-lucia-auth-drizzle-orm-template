@@ -7,6 +7,8 @@ import { validateRequest } from "@/lib/auth";
 import { cn } from "@nextui-org/react";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import Head from "next/head";
+import Script from "next/script";
 
 export const siteMetadata = metadata;
 export const siteViewport = viewport;
@@ -20,6 +22,11 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
+      <Script
+        async
+        src={process.env.UMAMI_SRC}
+        data-website-id={process.env.UMAMI_DATA_WEBSITE_ID}
+      />
       <body
         className={cn(
           fontSans.variable,
