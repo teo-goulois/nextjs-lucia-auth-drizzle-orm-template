@@ -7,7 +7,7 @@ const metadata: Metadata = {
   keywords:
     "authentication, Next.js, boilerplate, Lucia, GitHub, Google, password-less, two-factor, email, rate limiting",
   alternates: {
-    canonical: "",
+    canonical: "https://next-auth-boilerplate.com",
   },
 };
 
