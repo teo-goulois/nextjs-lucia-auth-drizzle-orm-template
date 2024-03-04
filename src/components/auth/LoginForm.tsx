@@ -1,6 +1,10 @@
 "use client";
 
-import { loginWithMagicLink, loginWithPassword, loginWithPassword2 } from "@/lib/api/auth/login";
+import {
+  loginWithMagicLink,
+  loginWithPassword,
+  loginWithPassword2,
+} from "@/lib/api/auth/login";
 import { LoginValitor, loginValidator } from "@/lib/validators/authValidator";
 import { PinInput } from "@ark-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -66,11 +70,14 @@ export default function LoginForm() {
       console.log("loginWithPassword ", { input });
 
       const data = await loginWithPassword2(input);
-     
+
       if (data && data?.isTwoFactor) {
         goToNextStep();
       }
       data && console.log({ data });
+      if (data?.success) {
+        console.log("loginWithPassword success");
+      }
     },
     onError: (error) => {
       toast.error(error.message ?? "An error occurred");

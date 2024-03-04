@@ -215,5 +215,8 @@ export const loginWithPassword2 = async ({
   cookies().set(sessionCookie);
   console.log("loginWithPassword final");
   if (withoutRedirect) return;
+  return {
+    success: true,
+  };
   redirect("/protected");
 };
