@@ -7,8 +7,12 @@ import { cn } from "@nextui-org/react";
 import Script from "next/script";
 import "./globals.css";
 
-export * as metadata from "@/config/metadata";
-export * as viewport from "@/config/viewport";
+import viewportConfig  from "@/config/viewport";
+import metadataConfig from "@/config/metadata";
+
+
+export const metadata = metadataConfig;
+export const viewport = viewportConfig;
 
 export default async function RootLayout({
   children,

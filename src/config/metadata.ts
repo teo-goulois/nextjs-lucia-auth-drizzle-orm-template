@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 
-export const metadata: Metadata = {
+const metadata: Metadata = {
   title: "Nextjs Authentication boilerplate",
   description:
     "Elevate your authentication experience. Our Nextjs boilerplate offers seamless integration, customization with Lucia, and advanced features like GitHub, Google, and password-less authentication.",
@@ -10,3 +10,5 @@ export const metadata: Metadata = {
     canonical: "",
   },
 };
+
+export default metadata;

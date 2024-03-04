@@ -12,7 +12,7 @@ export default function Home() {
     <>
       <main className="flex-1 w-full">
         <section className="w-full py-12 md:py-24 lg:py-32">
-          <div className="container  grid items-center gap-4 px-4 text-center md:px-6 lg:gap-10">
+          <div className="container  grid items-center gap-4 px-4 text-center md:px-6 md:gap-10">
             <div className="space-y-3 relative">
               <Spotlight
                 className="-top-40 left-0 md:left-60 md:-top-20"
