@@ -1,17 +1,14 @@
+import Navbar from "@/components/Navbar";
 import { SessionProvider } from "@/components/auth/SessionProvider";
 import { Providers } from "@/components/provider/Providers";
 import { fontMono, fontSans } from "@/config/font";
-import { metadata } from "@/config/metadata";
-import { viewport } from "@/config/viewport";
 import { validateRequest } from "@/lib/auth";
 import { cn } from "@nextui-org/react";
-import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Head from "next/head";
 import Script from "next/script";
+import "./globals.css";
 
-export const siteMetadata = metadata;
-export const siteViewport = viewport;
+export * as metadata from "@/config/metadata";
+export * as viewport from "@/config/viewport";
 
 export default async function RootLayout({
   children,
