@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  loginWithMagicLink,
-  loginWithPassword,
-  loginWithPassword2,
-} from "@/lib/api/auth/login";
+import { loginWithMagicLink, loginWithPassword } from "@/lib/api/auth/login";
 import { LoginValitor, loginValidator } from "@/lib/validators/authValidator";
 import { PinInput } from "@ark-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,6 +8,7 @@ import { Icon } from "@iconify/react";
 import { Button, Divider, Input, Link, Tooltip, cn } from "@nextui-org/react";
 import { useMutation } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -39,7 +36,7 @@ export default function LoginForm() {
   const [isVisible, setIsVisible] = useState(false);
   const [currentStep, helpers] = useStep(3);
   const { goToNextStep, goToPrevStep } = helpers;
-
+  const router = useRouter();
   const toggleVisibility = () => setIsVisible(!isVisible);
 
   const methods = useForm<LoginValitor>({
@@ -56,9 +53,12 @@ export default function LoginForm() {
 
   const magicLinkMutation = useMutation({
     mutationFn: async (input: LoginValitor) => {
-      const data = await loginWithMagicLink(input);
-      if (data && data.serverError) {
-        throw new Error(data.serverError);
+      const { data, serverError } = await loginWithMagicLink(input);
+      if (serverError) {
+        throw new Error(serverError);
+      }
+      if (data?.redirectUrl) {
+        router.push(data.redirectUrl);
       }
     },
     onError: (error) => {
@@ -67,16 +67,15 @@ export default function LoginForm() {
   });
   const passwordMutation = useMutation({
     mutationFn: async (input: LoginValitor) => {
-      console.log("loginWithPassword ", { input });
-
-      const data = await loginWithPassword2(input);
-
-      if (data && data?.isTwoFactor) {
+      const { data, serverError } = await loginWithPassword(input);
+      if (serverError) {
+        throw new Error(serverError);
+      }
+      if (data?.isTwoFactor) {
         goToNextStep();
       }
-      data && console.log({ data });
-      if (data?.success) {
-        console.log("loginWithPassword success");
+      if (data?.redirectUrl) {
+        router.push(data.redirectUrl);
       }
     },
     onError: (error) => {

@@ -4,7 +4,7 @@ import { lucia } from "@/lib/auth";
 import { github, google } from "@/lib/auth/providers";
 import { db } from "@/lib/db";
 import { action } from "@/lib/safe-action";
-import { rateLimiting, useRateLimiting } from "@/lib/utils.server";
+import { useRateLimiting } from "@/lib/utils.server";
 import { loginValidator } from "@/lib/validators/authValidator";
 import { generateCodeVerifier, generateState } from "arctic";
 import { cookies } from "next/headers";
@@ -13,7 +13,6 @@ import { decodeHex } from "oslo/encoding";
 import { TOTPController } from "oslo/otp";
 import { Argon2id } from "oslo/password";
 import { sendEmailVerificationCode } from "./mails";
-import { z } from "zod";
 
 export const loginWithMagicLink = action(
   loginValidator,
@@ -32,7 +31,10 @@ export const loginWithMagicLink = action(
       userId: existingUser.id,
     });
     if (withoutRedirect) return;
-    redirect(`/auth/verify-email?email=${email}`);
+    return {
+      redirectUrl: `/auth/verify-email?email=${email}`,
+    };
+    // redirect(`/auth/verify-email?email=${email}`);
   }
 );
 
@@ -50,7 +52,7 @@ export const loginWithGithub = async () => {
     maxAge: 60 * 10,
     sameSite: "lax",
   });
-
+  
   redirect(url.toString());
 };
 
@@ -77,22 +79,18 @@ export const loginWithGoogle = async () => {
     maxAge: 60 * 10,
     sameSite: "lax",
   });
-
+  
   redirect(url.toString());
 };
 
 export const loginWithPassword = action(
   loginValidator,
   async ({ email, withoutRedirect, password, code }) => {
-    console.log("loginWithPassword 1");
-
     await useRateLimiting();
-    console.log("loginWithPassword 2");
     // check if user exists
     const existingUser = await db.query.userTable.findFirst({
       where: (user, { eq }) => eq(user.email, email),
     });
-    console.log("loginWithPassword 3");
     if (!existingUser) {
       throw new Error("Invalid email");
     }
@@ -106,8 +104,6 @@ export const loginWithPassword = action(
       existingUser.hashed_password,
       password
     );
-    console.log("loginWithPassword 4");
-
     if (!validPassword) {
       throw new Error("Invalid email or password");
     }
@@ -118,8 +114,10 @@ export const loginWithPassword = action(
         userId: existingUser.id,
       });
       if (withoutRedirect) return;
-      console.log("loginWithPassword 5");
-      redirect(`/auth/verify-email?email=${email}`);
+      return {
+        redirectUrl: `/auth/verify-email?email=${email}`,
+      };
+      // redirect(`/auth/verify-email?email=${email}`);
     }
 
     if (existingUser.two_factor_secret) {
@@ -133,7 +131,10 @@ export const loginWithPassword = action(
         const session = await lucia.createSession(existingUser.id, {});
         const sessionCookie = lucia.createSessionCookie(session.id);
         cookies().set(sessionCookie);
-        redirect("/protected");
+        return {
+          redirectUrl: `/protected`,
+        };
+        // redirect("/protected");
       }
       return {
         isTwoFactor: true,
@@ -143,80 +144,10 @@ export const loginWithPassword = action(
     const session = await lucia.createSession(existingUser.id, {});
     const sessionCookie = lucia.createSessionCookie(session.id);
     cookies().set(sessionCookie);
-    console.log("loginWithPassword final");
     if (withoutRedirect) return;
-    redirect("/protected");
+    return {
+      redirectUrl: `/protected`,
+    };
+    // redirect("/protected");
   }
 );
-export const loginWithPassword2 = async ({
-  email,
-  withoutRedirect,
-  password,
-  code,
-}: z.infer<typeof loginValidator>) => {
-  console.log("loginWithPassword 1");
-
-  await rateLimiting();
-  console.log("loginWithPassword 2");
-  // check if user exists
-  const existingUser = await db.query.userTable.findFirst({
-    where: (user, { eq }) => eq(user.email, email),
-  });
-  console.log("loginWithPassword 3");
-  if (!existingUser) {
-    throw new Error("Invalid email");
-  }
-  if (!password) {
-    throw new Error("Password is required");
-  }
-  if (!existingUser.hashed_password) {
-    throw new Error("User does not have a password");
-  }
-  const validPassword = await new Argon2id().verify(
-    existingUser.hashed_password,
-    password
-  );
-  console.log("loginWithPassword 4");
-
-  if (!validPassword) {
-    throw new Error("Invalid email or password");
-  }
-
-  if (!existingUser.email_verified) {
-    await sendEmailVerificationCode({
-      email,
-      userId: existingUser.id,
-    });
-    if (withoutRedirect) return;
-    console.log("loginWithPassword 5");
-    redirect(`/auth/verify-email?email=${email}`);
-  }
-
-  if (existingUser.two_factor_secret) {
-    if (code) {
-      const validOTP = await new TOTPController().verify(
-        code.join(""),
-        decodeHex(existingUser.two_factor_secret)
-      );
-
-      if (!validOTP) throw new Error("Invalid code");
-      const session = await lucia.createSession(existingUser.id, {});
-      const sessionCookie = lucia.createSessionCookie(session.id);
-      cookies().set(sessionCookie);
-      redirect("/protected");
-    }
-    return {
-      isTwoFactor: true,
-    };
-  }
-
-  const session = await lucia.createSession(existingUser.id, {});
-  const sessionCookie = lucia.createSessionCookie(session.id);
-  cookies().set(sessionCookie);
-  console.log("loginWithPassword final");
-  if (withoutRedirect) return;
-  return {
-    success: true,
-  };
-  redirect("/protected");
-};
