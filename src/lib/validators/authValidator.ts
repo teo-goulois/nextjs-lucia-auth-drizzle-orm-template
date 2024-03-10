@@ -49,7 +49,7 @@ export type RegisterValidator = z.infer<typeof registerValidator>;
 
 /* Verify Email */
 export const verifyEmailValidator = z.object({
-  code: z.array(z.string()).length(8),
+  code: z.array(z.string()).length(6),
 });
 export type VerifyEmailValidator = z.infer<typeof verifyEmailValidator>;
 
