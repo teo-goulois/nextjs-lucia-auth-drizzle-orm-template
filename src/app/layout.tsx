@@ -3,12 +3,12 @@ import { SessionProvider } from "@/components/auth/SessionProvider";
 import { Providers } from "@/components/provider/Providers";
 import { fontMono, fontSans } from "@/config/font";
 import { validateRequest } from "@/lib/auth";
-import { cn } from "@nextui-org/react";
 import Script from "next/script";
 import "./globals.css";
 
 import viewportConfig  from "@/config/viewport";
 import metadataConfig from "@/config/metadata";
+import { cn } from "@/lib/utils";
 
 
 export const metadata = metadataConfig;
