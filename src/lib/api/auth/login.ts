@@ -5,7 +5,7 @@ import { github, google } from "@/lib/auth/providers";
 import { db } from "@/lib/db";
 import { action } from "@/lib/safe-action";
 import { useRateLimiting } from "@/lib/utils.server";
-import { loginValidator } from "@/lib/validators/authValidator";
+import { loginValidator } from "@/lib/validators/auth-validator";
 import { generateCodeVerifier, generateState } from "arctic";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";

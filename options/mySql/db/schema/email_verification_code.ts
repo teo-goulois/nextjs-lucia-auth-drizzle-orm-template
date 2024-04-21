@@ -1,6 +1,12 @@
-import { createId } from "@paralleldrive/cuid2";
-import { mysqlTable, timestamp, varchar } from "drizzle-orm/mysql-core";
 import { userTable } from "./user";
+import {
+  char,
+  datetime,
+  mysqlTable,
+  varchar,
+  timestamp,
+} from "drizzle-orm/mysql-core";
+import { createId } from "@paralleldrive/cuid2";
 
 export const emailVerificationCodeTable = mysqlTable(
   "email_verification_code",
@@ -13,6 +19,6 @@ export const emailVerificationCodeTable = mysqlTable(
       .notNull()
       .references(() => userTable.id),
     email: varchar("email", { length: 255 }).notNull(),
-    expires_at: timestamp("expires_at", { mode: "date" }).notNull(),
+    expires_at: datetime("expires_at", { mode: "date" }).notNull(),
   }
 );

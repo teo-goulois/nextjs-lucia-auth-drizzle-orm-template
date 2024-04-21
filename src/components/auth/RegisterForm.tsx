@@ -4,7 +4,7 @@ import { register } from "@/lib/api/auth/register";
 import {
   RegisterValidator,
   registerValidator,
-} from "@/lib/validators/authValidator";
+} from "@/lib/validators/auth-validator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Icon } from "@iconify/react";
 import { Button, Divider, Input, Link, Tooltip } from "@nextui-org/react";

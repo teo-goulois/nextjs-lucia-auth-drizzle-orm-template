@@ -3,7 +3,7 @@ import { resetPassword } from "@/lib/api/auth/password-reset";
 import {
   ResetPasswordValidator,
   resetPasswordValidator,
-} from "@/lib/validators/authValidator";
+} from "@/lib/validators/auth-validator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Icon } from "@iconify/react";
 import { Button, Input } from "@nextui-org/react";

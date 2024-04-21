@@ -6,7 +6,7 @@ import { action } from "@/lib/safe-action";
 import {
   passwordResetTokenValidator,
   resetPasswordValidator,
-} from "@/lib/validators/authValidator";
+} from "@/lib/validators/auth-validator";
 import { sendPasswordResetToken } from "./mails";
 import {
   PasswordResetTokenTable,

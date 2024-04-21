@@ -6,7 +6,7 @@ import { userTable } from "@/lib/db/schema";
 import { action } from "@/lib/safe-action";
 import {
   enableTwoFactorAuthValidator
-} from "@/lib/validators/authValidator";
+} from "@/lib/validators/auth-validator";
 import { eq } from "drizzle-orm";
 import { decodeHex } from "oslo/encoding";
 import { TOTPController } from "oslo/otp";

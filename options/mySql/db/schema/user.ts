@@ -1,5 +1,9 @@
 import { createId } from "@paralleldrive/cuid2";
-import { boolean, mysqlTable, varchar } from "drizzle-orm/mysql-core";
+import {
+  boolean,
+  mysqlTable,
+  varchar
+} from "drizzle-orm/mysql-core";
 
 export const userTable = mysqlTable("user", {
   id: varchar("id", { length: 128 })

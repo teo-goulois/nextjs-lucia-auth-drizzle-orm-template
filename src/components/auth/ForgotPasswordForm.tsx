@@ -3,7 +3,7 @@ import { passwordResetToken } from "@/lib/api/auth/password-reset";
 import {
   PasswordResetTokenValidator,
   passwordResetTokenValidator,
-} from "@/lib/validators/authValidator";
+} from "@/lib/validators/auth-validator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Divider, Input, Link } from "@nextui-org/react";
 import { useMutation } from "@tanstack/react-query";

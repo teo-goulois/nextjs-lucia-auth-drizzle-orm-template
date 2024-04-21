@@ -5,6 +5,13 @@ import { getSessionForMiddleware } from "./lib/auth/utils";
 const AuthRoutes = "/auth";
 const ProtectedRoutes = ["/protected"];
 
+/* 
+  With mySql need to remove the auth logic from the middleware
+  instead use the validateRequest function in the layout or in pages.
+  This is because we need to call the database to validate the session
+  and we can't call it with mysql2 because of edge incompatibility.
+*/
+
 export async function middleware(request: NextRequest) {
   const { nextUrl } = request;
 

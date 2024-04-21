@@ -1,7 +1,7 @@
 "use client";
 
 import { loginWithMagicLink, loginWithPassword } from "@/lib/api/auth/login";
-import { LoginValitor, loginValidator } from "@/lib/validators/authValidator";
+import { LoginValitor, loginValidator } from "@/lib/validators/auth-validator";
 import { PinInput } from "@ark-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Icon } from "@iconify/react";

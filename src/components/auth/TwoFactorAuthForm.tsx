@@ -8,7 +8,7 @@ import { createOtpCode } from "@/lib/auth/utils";
 import {
   twoFactorAuthValidator,
   TwoFactorAuthValidator,
-} from "@/lib/validators/authValidator";
+} from "@/lib/validators/auth-validator";
 import { PinInput } from "@ark-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, cn } from "@nextui-org/react";
