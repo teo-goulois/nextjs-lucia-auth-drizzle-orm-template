@@ -10,6 +10,7 @@ import { PinInput } from "@ark-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, cn } from "@nextui-org/react";
 import { useMutation } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -18,7 +19,7 @@ import { toast } from "sonner";
 export const VerifyEmailForm = () => {
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
-
+  const t = useTranslations("VerifyEmail.form");
   const methods = useForm<VerifyEmailValidator>({
     resolver: zodResolver(verifyEmailValidator),
     values: {
@@ -119,7 +120,7 @@ export const VerifyEmailForm = () => {
                     submitButtonRef.current?.click();
                   }, 10);
                 }}>
-                <PinInput.Label>Verification code</PinInput.Label>
+                <PinInput.Label>{t("verification-code.label")}</PinInput.Label>
                 <PinInput.Control className="flex items-center gap-1.5">
                   {Array.from(Array(6)).map((id, index) => (
                     <PinInput.Input
@@ -144,12 +145,12 @@ export const VerifyEmailForm = () => {
         />
       </div>
       <Button
-      color="primary"
+        color="primary"
         ref={submitButtonRef}
         type="submit"
         className="w-full"
         isLoading={verificationMutation.isPending}>
-        Verify
+        {t("action.submit")}
       </Button>
       <Button
         onPress={handleResendCode}
@@ -157,7 +158,7 @@ export const VerifyEmailForm = () => {
         isLoading={magicLinkMutation.isPending}
         className="w-full"
         variant="bordered">
-        Resend code
+        {t("action.resend")}
       </Button>
     </form>
   );

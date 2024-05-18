@@ -1,46 +1,17 @@
-import Navbar from "@/components/Navbar";
-import { SessionProvider } from "@/components/auth/SessionProvider";
-import { Providers } from "@/components/provider/Providers";
-import { fontMono, fontSans } from "@/config/font";
-import { validateRequest } from "@/lib/auth";
-import Script from "next/script";
-import "./globals.css";
+import { ReactNode } from "react";
+import "@/app/globals.css";
+import { locales } from "@/navigation";
 
-import viewportConfig  from "@/config/viewport";
-import metadataConfig from "@/config/metadata";
-import { cn } from "@/lib/utils";
+type Props = {
+  children: ReactNode;
+};
 
+// Since we have a `not-found.tsx` page on the root, a layout file
+// is required, even if it's just passing children through.
+export default function RootLayout({ children }: Props) {
+  return children;
+}
 
-export const metadata = metadataConfig;
-export const viewport = viewportConfig;
-
-export default async function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  const session = await validateRequest();
-
-  return (
-    <html lang="en">
-      <Script
-        async
-        src={process.env.UMAMI_SRC}
-        data-website-id={process.env.UMAMI_DATA_WEBSITE_ID}
-      />
-      <body
-        className={cn(
-          fontSans.variable,
-          fontMono.variable,
-          "min-h-screen h-screen"
-        )}>
-        <SessionProvider session={session}>
-          <Providers>
-            <Navbar />
-            {children}
-          </Providers>
-        </SessionProvider>
-      </body>
-    </html>
-  );
+export function generateStaticParams() {
+  return locales.map((locale) => ({ locale }));
 }

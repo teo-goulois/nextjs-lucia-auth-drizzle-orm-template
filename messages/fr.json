@@ -1,0 +1,146 @@
+{
+    "Home": {
+        "Hero": {
+            "title": "Élevez Votre Expérience d'Authentification <br></br> avec ce Kit de Démarrage.",
+            "subtitle": "Marre de passer des heures à configurer l'authentification ? La configuration est rapide et sans douleur, vous pouvez ainsi vous concentrer sur la création d'applications étonnantes.",
+            "action": {
+                "sign-in": "Se Connecter",
+                "dashboard": "Tableau de Bord"
+            }
+        },
+        "Features": {
+            "passwordless": {
+                "title": "Authentification Sans Mot de Passe avec Lien et Code par Email",
+                "description": "Accès sans friction, sécurité renforcée."
+            },
+            "provider": {
+                "title": "Authentification GitHub, Google, et Plus",
+                "description": "Intégration Transparente avec les Fournisseurs Populaires."
+            },
+            "middleware": {
+                "title": "Routage Middleware",
+                "description": "Gestion des Routes Simplifiée."
+            },
+            "password": {
+                "title": "Authentification par Mot de Passe avec Fonctionnalité de Réinitialisation",
+                "description": "Accès Sécurisé, Récupération sans Tracas."
+            },
+            "tfa": {
+                "title": "Authentification à Deux Facteurs pour Plus de Protection",
+                "description": "Double Sécurité, Zéro Compromis."
+            },
+            "email": {
+                "title": "Email Personnalisé avec React Email",
+                "description": "Engagez les Utilisateurs avec des Communications Email Époustouflantes."
+            },
+            "rate-limiting": {
+                "title": "Limitation de Taux",
+                "description": "Maintenez l'Intégrité de l'Application avec une Limitation de Taux Intégrée."
+            }
+        },
+        "Cta": {
+            "title": "Rejoignez-nous sur GitHub",
+            "subtitle": "Découvrez notre solution d'authentification open-source sur GitHub. Contribuez au projet, partagez vos retours, et faites partie de notre communauté grandissante.",
+            "action": "GitHub"
+        }
+    },
+    "Navbar": {
+        "links": {
+            "login": "Connexion",
+            "dashboard": "Tableau de Bord",
+            "logout": "Déconnexion",
+            "get-started": "Commencer"
+        }
+    },
+    "NotFound": {
+        "title": "404",
+        "subtitle": "Page Non Trouvée",
+        "action": "Retour à l'Accueil"
+    },
+    "ForgotPassword": {
+        "title": "Mot de Passe Oublié",
+        "subtitle": "Entrez votre adresse email et nous vous enverrons un lien pour réinitialiser votre mot de passe",
+        "form": {
+            "email": {
+                "label": "Adresse Email",
+                "placeholder": "Entrez votre email"
+            },
+            "action": {
+                "submit": "Continuer"
+            }
+        },
+        "or": {
+            "text": "Ou",
+            "action": "Se Connecter"
+        },
+        "action": "Envoyer le Lien de Réinitialisation"
+    },
+    "Login": {
+        "title": "Se Connecter",
+        "form": {
+            "email": {
+                "label": "Adresse Email",
+                "placeholder": "Entrez votre email"
+            },
+            "password": {
+                "label": "Mot de Passe",
+                "placeholder": "Entrez votre mot de passe"
+            },
+            "verification-code": {
+                "label": "Code de Vérification",
+                "placeholder": "Entrez votre code de vérification",
+                "verify": "Vérifier"
+            },
+            "login-with-email": "Se Connecter avec Email",
+            "login-with-password": "Se Connecter avec Mot de Passe",
+            "action": {
+                "forgot-password": "Mot de Passe Oublié",
+                "submit": "Se Connecter"
+            }
+        },
+        "or": {
+            "text": "Ou",
+            "text-action": "Besoin de créer un compte ?",
+            "action": "S'inscrire"
+        }
+    },
+    "VerifyEmail": {
+        "title": "Vérifiez votre email",
+        "subtitle": "Entrez le code que nous avons envoyé à",
+        "form": {
+            "verification-code": {
+                "label": "Code de Vérification",
+                "placeholder": "Entrez votre code de vérification"
+            },
+            "action": {
+                "submit": "Vérifier",
+                "resend": "Renvoyer le Code"
+            }
+        },
+        "unreceived": {
+            "text": "Vous n'avez pas reçu le code ?",
+            "check": "Vérifiez votre dossier spam ou",
+            "contact": "Contactez le support"
+        }
+    },
+    "Protected": {
+        "title": "Bonjour,"
+    },
+    "Tfa": {
+        "enabled": {
+            "title": "2FA est activé",
+            "disabled": "Désactiver 2FA"
+        },
+        "disabled": {
+            "title": "Configurer l'authentification à deux facteurs (2FA)",
+            "subtitle": "Pour autoriser la transaction, scannez le code QR avec votre application d'authentification, puis",
+            "enabled": "Activer 2FA"
+        },
+        "form": {
+            "action": {
+                "cancel": "Annuler",
+                "submit": "Vérifier"
+            }
+        }
+    }
+}

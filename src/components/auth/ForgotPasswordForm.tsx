@@ -10,8 +10,10 @@ import { useMutation } from "@tanstack/react-query";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { ProviderForm } from "./ProviderForm";
+import { useTranslations } from "next-intl";
 
 export const ForgotPasswordForm = () => {
+  const t = useTranslations("ForgotPassword");
   const methods = useForm<PasswordResetTokenValidator>({
     resolver: zodResolver(passwordResetTokenValidator),
     values: {
@@ -49,16 +51,13 @@ export const ForgotPasswordForm = () => {
   const onSubmit = async (data: PasswordResetTokenValidator) => {
     passwordResetTokenMutation.mutate(data);
   };
-  
+
   return (
     <div className="flex h-full w-full items-center justify-center">
       <div className="flex w-full max-w-sm flex-col gap-4 rounded-large bg-content1 px-8 pb-10 pt-6 shadow-small">
         <div className="flex min-h-[40px] flex-col  gap-2 pb-2">
-          <p className="text-xl font-medium">Forgot password </p>
-          <p className="text-sm text-secondary-foreground">
-            Enter your email address and we will send you a link to reset your
-            password
-          </p>
+          <p className="text-xl font-medium">{t("title")} </p>
+          <p className="text-sm text-secondary-foreground">{t("subtitle")}</p>
         </div>
         <form className="flex flex-col gap-3" onSubmit={handleSubmit(onSubmit)}>
           <Controller
@@ -68,14 +67,14 @@ export const ForgotPasswordForm = () => {
               return (
                 <Input
                   {...field}
-                  label="Email Address"
+                  label={t("form.email.label")}
                   type="email"
                   onChange={(e) => {
                     field.onChange(e);
                     trigger("email");
                   }}
                   variant="bordered"
-                  placeholder="Enter your email"
+                  placeholder={t("form.email.placeholder")}
                   isInvalid={!!errors.email}
                   errorMessage={errors.email?.message}
                 />
@@ -87,19 +86,19 @@ export const ForgotPasswordForm = () => {
             isLoading={passwordResetTokenMutation.isPending}
             color="primary"
             type="submit">
-            Continue
+            {t("form.action.submit")}
           </Button>
         </form>
 
         <div className="flex items-center gap-4 py-2">
           <Divider className="flex-1" />
-          <p className="shrink-0 text-tiny text-default-500">OR</p>
+          <p className="shrink-0 text-tiny text-default-500">{t("or.text")}</p>
           <Divider className="flex-1" />
         </div>
         <ProviderForm />
         <p className="text-center text-small">
           <Link href="/auth/login" size="sm">
-            Sign In
+            {t("or.action")}
           </Link>
         </p>
       </div>

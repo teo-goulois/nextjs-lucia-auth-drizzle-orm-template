@@ -1,6 +1,8 @@
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { getSessionForMiddleware } from "./lib/auth/utils";
+import createIntlMiddleware from "next-intl/middleware";
+import { localePrefix, locales, pathnames } from "./navigation";
 
 const AuthRoutes = "/auth";
 const ProtectedRoutes = ["/protected"];
@@ -14,6 +16,17 @@ const ProtectedRoutes = ["/protected"];
 
 export async function middleware(request: NextRequest) {
   const { nextUrl } = request;
+  // Step 1: Use the incoming request (example)
+  const defaultLocale = (request.headers.get("x-your-custom-locale") ||
+    "en") as "fr" | "en";
+  // Step 2: Create and call the next-intl middleware (example)
+  const handleI18nRouting = createIntlMiddleware({
+    locales,
+    defaultLocale,
+    pathnames:pathnames,
+    localePrefix: localePrefix
+  });
+  const response = handleI18nRouting(request);
 
   const sessionId = cookies().get("auth_session")?.value ?? null;
   const { user } = await getSessionForMiddleware(sessionId);
@@ -30,23 +43,14 @@ export async function middleware(request: NextRequest) {
   }
 
   // Redirect to /auth/login if user is not logged in and tries to access protected routes
-  if (!user && isProtectedRoute) {
+  if (!user && isProtectedRoute) {    
     const url = new URL("/auth/login", nextUrl.origin);
     return NextResponse.redirect(url);
   }
 
-  return NextResponse.next();
+  return response;
 }
 
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
-    "/((?!api|_next/static|_next/image|favicon.ico).*)",
-  ],
+  matcher: ['/', '/(en|fr)/:path*', '/((?!api|_next|.*\\..*).*)'],
 };

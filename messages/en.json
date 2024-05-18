@@ -1,0 +1,151 @@
+{
+    "Home": {
+        "Hero": {
+            "title": "Elevate Your Authentication <br></br> Experience with this Starter Kit .",
+            "subtitle": "Tired of spending hours configuring authentication? setup is quick and painless, so you can focus on building amazing applications.            ",
+            "action": {
+                "sign-in": "Sign In",
+                "dashboard": "Dashboard"
+            }
+        },
+        "Features": {
+            "passwordless": {
+                "title": "Password-less Auth with Email Link and Code",
+                "description": "Frictionless Access, Enhanced Security."
+            },
+            "provider": {
+                "title": "SoGitHub, Google, and More Auth",
+                "description": "Seamless Integration with Popular Providers."
+            },
+            "middleware": {
+                "title": "Middleware Routing",
+                "description": "Streamlined Route Management."
+            },
+            "password": {
+                "title": "Password Auth with Reset Password Functionality",
+                "description": "Secure User Access, Hassle-free Recovery."
+            },
+            "tfa": {
+                "title": "Two-Factor Auth for More Protection",
+                "description": "Double the Security, Zero Compromise."
+            },
+            "email": {
+                "title": "Custom Email with React Email",
+                "description": "Engage Users with Stunning Email Communications."
+            },
+            "rate-limiting": {
+                "title": "Rate Limiting",
+                "description": "Maintain Application Integrity with Built-in Rate Limiting."
+            }
+        },
+        "Cta": {
+            "title": "Join Us on GitHub",
+            "subtitle": "Explore our open-source authentication solution on GitHub. Contribute to the project, share feedback, and be a part of our growing community.",
+            "action": "GitHub"
+        }
+    },
+    "Navbar": {
+        "links": {
+            "login": "Login",
+            "dashboard": "Dashboard",
+            "logout": "Logout",
+            "get-started": "Get Started"
+        }
+    },
+    "NotFound": {
+        "title": "404",
+        "subtitle": "Page Not Found",
+        "action": "Go Home"
+    },
+    "ForgotPassword": {
+        "title": "Forgot Password",
+        "subtitle": "Enter your email address and we will send you a link to reset your password",
+        "form": {
+            "email": {
+                "label": "Email Address",
+                "placeholder": "Enter your email"
+            },
+            "action": {
+                "submit": "Continue"
+            }
+        },
+        "or": {
+            "text": "Or",
+            "action": "Sign In"
+        },
+        "action": "Send Reset Link"
+    },
+    "Login": {
+        "title": "Log In",
+        "form": {
+            "email": {
+                "label": "Email Address",
+                "placeholder": "Enter your email"
+            },
+            "password": {
+                "label": "Password",
+                "placeholder": "Enter your password"
+            },
+            "verification-code": {
+                "label": "Verification Code",
+                "placeholder": "Enter your verification code",
+                "verify": "Verify"
+            },
+            "login-with-email": "Log In with Email",
+            "login-with-password": "Log In with Password",
+            "action": {
+                "forgot-password": "Forgot Password",
+                "submit": "Log In"
+            }
+        },
+        "or": {
+            "text": "Or",
+            "text-action": "Need to create an account? ",
+            "action": "Sign Up"
+        }
+    },
+    "VerifyEmail": {
+        "title": "Verify your email",
+        "subtitle": "Enter the code we sent to",
+        "form": {
+            "verification-code": {
+                "label": "Verification Code",
+                "placeholder": "Enter your verification code"
+            },
+            "action": {
+                "submit": "Verify",
+                "resend": "Resend Code"
+            }
+        },
+        "unreceived": {
+            "text": "Didn't receive the code?",
+            "check": "Check your spam folder or",
+            "contact": "Contact support"
+        }
+    },
+    "Protected": {
+        "title": "Hi,"
+    },
+    "Tfa": {
+        "enabled": {
+            "title": "2FA is enabled",
+            "disabled": "Disable 2FA"
+        },
+        "disabled": {
+            "title": "Set up two factor auth (2FA)",
+            "subtitle": "to authorize transaction scan the QR code with your authenticator app, then",
+            "enabled": "Enable 2FA"
+        },
+        "form": {
+            "action": {
+                "cancel": "Cancel",
+                "submit": "Verify"
+            }
+        }
+    },
+    "LocaleSwitcher": {
+        "switchLocale": "Switch to {locale, select, en {English} other {Unknown}",
+        "label": "Change language",
+        "locale": "{locale, select, en {English} fr {French} other {Unknown}"
+    }
+}

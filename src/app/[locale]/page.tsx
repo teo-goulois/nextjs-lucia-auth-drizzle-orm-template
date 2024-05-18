@@ -1,13 +1,13 @@
-import { Footer } from "@/components/Footer";
+import { Cta } from "@/components/Cta";
 import { FeatureGrid } from "@/components/landing/FeatureGrid";
 import { Spotlight } from "@/components/ui/Spotlight";
 import { Button } from "@nextui-org/react";
-import {
-  SparklesIcon
-} from "lucide-react";
+import { SparklesIcon } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 
-export default function Home() {
+export default async function Home() {
+  const t = await getTranslations("Home");
   return (
     <>
       <main className="flex-1 w-full">
@@ -19,13 +19,10 @@ export default function Home() {
                 fill="white"
               />{" "}
               <h1 className="text-4xl md:text-6xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50">
-                Elevate Your Authentication <br />
-                Experience with this Starter Kit .
+                {t.rich("Hero.title")}
               </h1>
               <p className="pt-4 font-normal text-base lg:text-lg text-neutral-300 max-w-lg text-center mx-auto">
-                Tired of spending hours configuring authentication? setup is
-                quick and painless, so you can focus on building amazing
-                applications.
+                {t("Hero.subtitle")}
               </p>
             </div>
             <div className="flex justify-center gap-6 items-center">
@@ -34,16 +31,16 @@ export default function Home() {
                 size="lg"
                 as={Link}
                 href="/protected">
-                Sign in
+                {t("Hero.action.sign-in")}
               </Button>
               <Button size="lg" variant="bordered" as={Link} href="/protected">
-                Dashboard
+                {t("Hero.action.dashboard")}
               </Button>
             </div>
           </div>
         </section>
         <FeatureGrid />
-        <Footer />
+        <Cta />
       </main>
     </>
   );

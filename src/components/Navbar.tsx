@@ -13,17 +13,17 @@ import {
   NavbarMenu,
   NavbarMenuItem,
   NavbarMenuToggle,
-  Navbar as NavbarUi
+  Navbar as NavbarUi,
 } from "@nextui-org/react";
 import Image from "next/image";
 import React from "react";
 import { useSession } from "./auth/SessionProvider";
-
+import { useTranslations } from "next-intl";
 
 export default function Navbar(props: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const { session } = useSession();
-
+  const t = useTranslations("Navbar");
   return (
     <NavbarUi
       {...props}
@@ -61,7 +61,7 @@ export default function Navbar(props: NavbarProps) {
               color="secondary"
               endContent={<Icon icon="solar:alt-arrow-right-linear" />}
               variant="flat">
-              Dashboard
+              {t("links.dashboard")}
             </Button>
           </NavbarItem>
         ) : (
@@ -71,7 +71,7 @@ export default function Navbar(props: NavbarProps) {
               href={`/auth/login`}
               className="text-default-500"
               variant="light">
-              Login
+              {t("links.login")}
             </Button>
             <Button
               as={Link}
@@ -80,7 +80,7 @@ export default function Navbar(props: NavbarProps) {
               color="secondary"
               endContent={<Icon icon="solar:alt-arrow-right-linear" />}
               variant="flat">
-              Get Started
+              {t("links.get-started")}
             </Button>
           </NavbarItem>
         )}
@@ -109,7 +109,7 @@ export default function Navbar(props: NavbarProps) {
               color="secondary"
               endContent={<Icon icon="solar:alt-arrow-right-linear" />}
               variant="flat">
-              Dashboard
+              {t("links.dashboard")}
             </Button>
           </NavbarMenuItem>
         ) : (
@@ -121,7 +121,7 @@ export default function Navbar(props: NavbarProps) {
                 href={`/auth/login`}
                 className="text-default-500"
                 variant="light">
-                Login
+                {t("links.login")}
               </Button>
             </NavbarMenuItem>
             <NavbarMenuItem className="">
@@ -133,7 +133,7 @@ export default function Navbar(props: NavbarProps) {
                 color="secondary"
                 endContent={<Icon icon="solar:alt-arrow-right-linear" />}
                 variant="flat">
-                Get Started
+                {t("links.get-started")}
               </Button>
             </NavbarMenuItem>
           </>

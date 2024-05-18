@@ -14,6 +14,7 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useStep } from "usehooks-ts";
 import { ProviderForm } from "./ProviderForm";
+import { useTranslations } from "next-intl";
 
 const variants = {
   enter: (direction: number) => ({
@@ -38,7 +39,7 @@ export default function LoginForm() {
   const { goToNextStep, goToPrevStep } = helpers;
   const router = useRouter();
   const toggleVisibility = () => setIsVisible(!isVisible);
-
+  const t = useTranslations("Login");
   const methods = useForm<LoginValitor>({
     resolver: zodResolver(loginValidator),
   });
@@ -113,7 +114,7 @@ export default function LoginForm() {
               </Button>
             </Tooltip>
           )}
-          <p className="text-xl font-medium">Log In</p>
+          <p className="text-xl font-medium">{t("title")}</p>
         </div>
         <AnimatePresence custom={currentStep} initial={false} mode="wait">
           <motion.form
@@ -138,14 +139,14 @@ export default function LoginForm() {
                     return (
                       <Input
                         {...field}
-                        label="Email Address"
+                        label={t("form.email.label")}
                         type="email"
                         onChange={(e) => {
                           field.onChange(e);
                           trigger("email");
                         }}
                         variant="bordered"
-                        placeholder="Enter your email"
+                        placeholder={t("form.email.placeholder")}
                         isInvalid={!!errors.email}
                         errorMessage={errors.email?.message}
                       />
@@ -160,7 +161,7 @@ export default function LoginForm() {
                   onPress={() => {
                     setValue("withPassword", false);
                   }}>
-                  Log In with Email
+                  {t("form.login-with-email")}
                 </Button>
 
                 <Button
@@ -172,7 +173,7 @@ export default function LoginForm() {
                   fullWidth
                   color="default"
                   variant="flat">
-                  continue with password
+                  {t("form.login-with-password")}
                 </Button>
               </>
             ) : currentStep === 2 ? (
@@ -199,9 +200,9 @@ export default function LoginForm() {
                             )}
                           </button>
                         }
-                        label="Password"
+                        label={t("form.password.label")}
                         name="password"
-                        placeholder="Enter your password"
+                        placeholder={t("form.password.placeholder")}
                         type={isVisible ? "text" : "password"}
                         variant="bordered"
                         isInvalid={!!errors.password}
@@ -214,14 +215,14 @@ export default function LoginForm() {
                   className="text-default-500"
                   href="/auth/forgot-password"
                   size="sm">
-                  Forgot password?
+                  {t("form.action.forgot-password")}
                 </Link>
                 <Button
                   isLoading={passwordMutation.isPending}
                   fullWidth
                   color="primary"
                   type="submit">
-                  Log In
+                  {t("form.action.submit")}
                 </Button>
               </>
             ) : (
@@ -246,7 +247,9 @@ export default function LoginForm() {
                           onValueComplete={(e) => {
                             console.log(e);
                           }}>
-                          <PinInput.Label>Verification code</PinInput.Label>
+                          <PinInput.Label>
+                            {t("form.verification-code.label")}
+                          </PinInput.Label>
                           <PinInput.Control className="flex items-center gap-1.5">
                             {Array.from(Array(6)).map((id, index) => (
                               <PinInput.Input
@@ -275,7 +278,7 @@ export default function LoginForm() {
                   isLoading={passwordMutation.isPending}
                   fullWidth
                   color="primary">
-                  Verify
+                  {t("form.verification-code.verify")}
                 </Button>
               </>
             )}
@@ -284,14 +287,14 @@ export default function LoginForm() {
 
         <div className="flex items-center gap-4 py-2">
           <Divider className="flex-1" />
-          <p className="shrink-0 text-tiny text-default-500">OR</p>
+          <p className="shrink-0 text-tiny text-default-500">{t("or.text")}</p>
           <Divider className="flex-1" />
         </div>
         <ProviderForm />
         <p className="text-center text-small">
-          Need to create an account?&nbsp;
+          {t("or.text-action")}&nbsp;
           <Link href="/auth/register" size="sm">
-            Sign Up
+            {t("or.action")}
           </Link>
         </p>
       </div>

@@ -13,6 +13,7 @@ import { PinInput } from "@ark-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, cn } from "@nextui-org/react";
 import { useMutation } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { QRCodeSVG } from "qrcode.react";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -24,7 +25,7 @@ export const TwoFactorAuthForm = ({}: Props) => {
   const [values, setValues] = useState(createOtpCode(user?.email!));
   const [is2faEnabled, setIs2faEnabled] = useState(!!user?.setupTwoFactor);
   const { secret, uri } = values;
-
+  const t = useTranslations('Tfa')
   const methods = useForm<TwoFactorAuthValidator>({
     resolver: zodResolver(twoFactorAuthValidator),
     values: {
@@ -80,22 +81,22 @@ export const TwoFactorAuthForm = ({}: Props) => {
     <>
       {is2faEnabled ? (
         <div className="">
-          <p>2FA is enabled</p>
+          <p>{t('enabled.title')}</p>
           <Button
             variant="bordered"
             fullWidth
             isLoading={remove2faMutation.isPending}
             color="primary"
             onClick={() => remove2faMutation.mutate()}>
-            Disable 2FA
+            {t('enabled.disabled')}
           </Button>
         </div>
       ) : (
         <div className="flex w-full max-w-sm flex-col gap-4 rounded-large bg-content1 px-8 pb-10 pt-6 shadow-small">
           <div className="flex flex-col min-h-[40px]  gap-2 pb-2">
-            <p className="text-xl font-medium">Set up two factor auth (2FA)</p>
+            <p className="text-xl font-medium">{t('disabled.title')}</p>
             <p className="text-sm">
-              to authorize transaction scan the QR code with your authenticator
+              {t('disabled.subtitle')}
             </p>
           </div>
           <div className="flex justify-center">
@@ -160,14 +161,14 @@ export const TwoFactorAuthForm = ({}: Props) => {
                 isDisabled={enableTwoFactorAuthMutation.isPending}
                 fullWidth
                 color="primary">
-                Cancel
+                {t('form.action.cancel')}
               </Button>
               <Button
                 type="submit"
                 isLoading={enableTwoFactorAuthMutation.isPending}
                 fullWidth
                 color="primary">
-                Verify
+                {t('form.action.submit')}
               </Button>
             </div>
           </form>
